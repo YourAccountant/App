@@ -70,7 +70,7 @@ class Cache implements CachePoolContract
         foreach ($files as $file) {
             if (\is_file($file)) {
                 unset($file);
-            } else if (\is_dir($file)) {
+            } elseif (\is_dir($file)) {
                 $this->clear($path . "/" . $file);
             }
         }
@@ -151,5 +151,4 @@ class Cache implements CachePoolContract
 
         return $success;
     }
-
 }

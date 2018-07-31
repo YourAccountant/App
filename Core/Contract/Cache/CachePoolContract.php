@@ -21,5 +21,4 @@ interface CachePoolContract
     public function saveDeferred(CacheItemContract $item);
 
     public function commit();
-
 }
