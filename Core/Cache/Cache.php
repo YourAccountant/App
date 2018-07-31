@@ -7,13 +7,25 @@ use \Core\Contract\Cache\CachePoolContract;
 
 class Cache implements CachePoolContract
 {
-
+    /**
+     * @var array \Core\Contract\Cache\CacheItemContract
+     */
     private $cacheItems = [];
 
+    /**
+     * @var array \Core\Contract\Cache\CacheItemContract
+     */
     private $deferred = [];
 
+    /**
+     * @var string
+     */
     private $path;
 
+    /**
+     * @param string $path
+     * @return self
+     */
     public function __construct(string $path)
     {
         $this->path = rtrim($path, "/");
@@ -23,6 +35,10 @@ class Cache implements CachePoolContract
         }
     }
 
+    /**
+     * @param string $key
+     * @return object \Core\Contract\Cache\CacheItemContract
+     */
     public function getItem($key)
     {
         if (!$this->hasItem($key)) {
@@ -40,16 +56,29 @@ class Cache implements CachePoolContract
         return $cacheItem;
     }
 
+     /**
+     * @param array $keys
+     * @return array \Core\Contract\Cache\CacheItemContract
+     */
     public function getItems($keys = [])
     {
         $result = [];
-        foreach ($keys as $key) {
-            $result[$key] = $this->getItem($key);
+
+        if (!empty($keys)) {
+            foreach ($keys as $key) {
+                $result[$key] = $this->getItem($key);
+            }
+        } else {
+            $result = $this->cacheItems;
         }
 
         return $result;
     }
 
+    /**
+     * @param string $key
+     * @return bool
+     */
     public function hasItem($key)
     {
         if (isset($this->cacheItems[$key])) {
@@ -63,6 +92,10 @@ class Cache implements CachePoolContract
         return false;
     }
 
+    /**
+     * @param string $path (optional)
+     * @return self
+     */
     public function clear($path = null)
     {
         $path = $path ?? $this->path;
@@ -78,6 +111,10 @@ class Cache implements CachePoolContract
         return $this;
     }
 
+    /**
+     * @param string $key
+     * @return bool
+     */
     public function deleteItem($key)
     {
         if (!$this->hasItem($key)) {
@@ -99,8 +136,17 @@ class Cache implements CachePoolContract
         return true;
     }
 
+    /**
+     * @param array keys
+     * @return bool
+     */
     public function deleteItems($keys = [])
     {
+        if (empty($keys)) {
+            $this->clear();
+            return true;
+        }
+
         $success = true;
         foreach ($keys as $key) {
             if (!$this->deleteItem($key)) {
@@ -111,6 +157,10 @@ class Cache implements CachePoolContract
         return $success;
     }
 
+    /**
+     * @param object \Core\Contract\Cache\CacheItemContract $item
+     * @return bool
+     */
     public function save(CacheItemContract $item)
     {
         if ($this->hasItem($item->getKey())) {
@@ -126,18 +176,28 @@ class Cache implements CachePoolContract
         return true;
     }
 
+    /**
+     * @param object \Core\Contract\Cache\CacheItemContract $item
+     * @return self
+     */
     public function saveDeferred(CacheItemContract $item)
     {
         $this->deferred[] = $item;
         return $this;
     }
 
+    /**
+     * @return self
+     */
     public function clearDeferred()
     {
         $this->deferred = [];
         return $this;
     }
 
+    /**
+     * @return bool
+     */
     public function commit()
     {
         $success = true;
