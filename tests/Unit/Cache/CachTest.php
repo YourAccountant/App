@@ -43,4 +43,21 @@ class CacheTest extends TestCase
         $has = $cache->hasItem("test1") && $cache->hasItem("test2") && $cache->hasItem("test3");
         $this->assertSame(false, $has);
     }
+
+    public function testClearCache()
+    {
+        $cacheItem1 = new CacheItem("test1", ["hello" => "world"]);
+        $cacheItem2 = new CacheItem("test2", ["hello" => "world"]);
+        $cacheItem3 = new CacheItem("test3", ["hello" => "world"]);
+
+        $cache = new Cache(__DIR__ . "/../../data/temp/");
+        $cache->saveDeferred($cacheItem1);
+        $cache->saveDeferred($cacheItem2);
+        $cache->saveDeferred($cacheItem3);
+        $cache->commit();
+
+        $cache->clear();
+
+        $this->assertSame(false, file_exists(__DIR__ . "/../../data/temp/test1.cache"));
+    }
 }

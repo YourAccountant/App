@@ -49,7 +49,7 @@ class Cache implements CachePoolContract
             return $this->cacheItems[$key];
         }
 
-        $content = unserialize(file_get_contents($this->path . "/" . $key));
+        $content = unserialize(file_get_contents($this->path . "/" . $key . ".cache"));
         $cacheItem = new CacheItem($key, $content);
         $this->cacheItems[$key] = $cacheItem;
 
@@ -85,7 +85,7 @@ class Cache implements CachePoolContract
             return true;
         }
 
-        if (file_exists($this->path . "/" . $key)) {
+        if (file_exists($this->path . "/" . $key . ".cache")) {
             return true;
         }
 
@@ -96,17 +96,18 @@ class Cache implements CachePoolContract
      * @param string $path (optional)
      * @return self
      */
-    public function clear($path = null)
+    public function clear()
     {
-        $path = $path ?? $this->path;
-        $files = \scandir($path);
+        $files = \scandir($this->path);
+
         foreach ($files as $file) {
+            $file = $this->path . "/" . $file;
             if (\is_file($file)) {
-                unset($file);
-            } elseif (\is_dir($file)) {
-                $this->clear($path . "/" . $file);
+                unlink($file);
             }
         }
+
+        $this->cacheItems = [];
 
         return $this;
     }
@@ -121,7 +122,7 @@ class Cache implements CachePoolContract
             return false;
         }
 
-        $file = $this->path . "/" . $key;
+        $file = $this->path . "/" . $key . ".cache";
 
         if (!is_file($file)) {
             return false;
@@ -170,7 +171,7 @@ class Cache implements CachePoolContract
         $key = $item->getKey();
         $contents = $item->get();
 
-        \file_put_contents($this->path . "/" . $key, serialize($contents));
+        \file_put_contents($this->path . "/" . $key . ".cache", serialize($contents));
         $this->cacheItems[$key] = $item;
 
         return true;
