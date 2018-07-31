@@ -34,8 +34,7 @@ class Cache implements CachePoolContract
         }
 
         $content = unserialize(file_get_contents($this->path . "/" . $key));
-        $cacheItem = new CacheItem();
-        $cacheItem->set($key, $content);
+        $cacheItem = new CacheItem($key, $content);
         $this->cacheItems[$key] = $cacheItem;
 
         return $cacheItem;

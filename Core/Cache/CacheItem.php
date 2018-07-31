@@ -11,6 +11,12 @@ class CacheItem implements CacheItemContract
 
     private $content;
 
+    public function __construct(string $key, $content)
+    {
+        $this->key = $key;
+        $this->content = $content;
+    }
+
     public function get()
     {
         return $this->content;
@@ -19,12 +25,5 @@ class CacheItem implements CacheItemContract
     public function getKey()
     {
         return $this->key;
-    }
-
-    public function set(string $key, $content)
-    {
-        $this->key = $key;
-        $this->content = $content;
-        return $this;
     }
 }
