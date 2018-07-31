@@ -21,7 +21,7 @@ class CacheItem implements CacheItemContract
         return $this->key;
     }
 
-    public function set(string $key, array $content)
+    public function set(string $key, $content)
     {
         $this->key = $key;
         $this->content = $content;

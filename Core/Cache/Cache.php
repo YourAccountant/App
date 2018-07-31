@@ -16,7 +16,11 @@ class Cache implements CachePoolContract
 
     public function __construct(string $path)
     {
-        $this->path = trim($path, "/");
+        $this->path = rtrim($path, "/");
+
+        if (!file_exists($this->path)) {
+            mkdir($this->path, 0777, true);
+        }
     }
 
     public function getItem($key)
@@ -25,7 +29,16 @@ class Cache implements CachePoolContract
             return false;
         }
 
-        return unserialize(file_get_contents($this->path . "/" . $key));
+        if (isset($this->cacheItems[$key])) {
+            return $this->cacheItems[$key];
+        }
+
+        $content = unserialize(file_get_contents($this->path . "/" . $key));
+        $cacheItem = new CacheItem();
+        $cacheItem->set($key, $content);
+        $this->cacheItems[$key] = $cacheItem;
+
+        return $cacheItem;
     }
 
     public function getItems($keys = [])

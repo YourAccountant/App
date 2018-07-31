@@ -8,11 +8,5 @@ interface CacheItemContract
 
     public function getKey();
 
-    public function isHit();
-
-    public function set($value);
-
-    public function expiresAt($expiration);
-
-    public function expiresAfter($time);
+    public function set(string $key, $value);
 }
