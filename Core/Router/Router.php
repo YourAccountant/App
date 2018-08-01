@@ -16,6 +16,8 @@ class Router implements RouterContract
 
     private $middleware = [];
 
+    public $on = [];
+
     public function __construct($controllers = null, $services = null)
     {
         $this->controllers = $controllers;
@@ -24,7 +26,7 @@ class Router implements RouterContract
 
     public function setPrefix($prefix)
     {
-        $this->prefix = '/' . trim($this->prefix, '/');
+        $this->prefix = '/' . trim($prefix, '/');
         return $this;
     }
 
@@ -46,6 +48,26 @@ class Router implements RouterContract
     {
         $dispatcher = new Dispatcher($this, $this->services, $this->controllers);
         $dispatcher->run();
+    }
+
+    public function on($code, $callback)
+    {
+        switch($code) {
+            case 404:
+                $this->on[404] = $callback;
+            break;
+            case 403:
+                $this->on[403] = $callback;
+            break;
+            case 400:
+                $this->on[400] = $callback;
+            break;
+            case 500:
+                $this->on[500] = $callback;
+            break;
+        }
+
+        return $this;
     }
 
     public function get($route, $callback)

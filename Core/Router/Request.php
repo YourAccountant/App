@@ -24,20 +24,22 @@ class Request
 
     public $queryParameters;
 
-    public $anchor;
+    public $params;
 
     public function __construct()
     {
         $this->fullUrl = self::getFullUrl();
         $this->parsedUrl = parse_url($this->fullUrl);
-        $this->path = $this->parsedUrl['path'];
+        $this->parsedUrl['path'] = preg_replace("/\/\/{2,}/", "", $this->parsedUrl['path']);
+        $this->path = $this->parsedUrl['path'] ?? "/";
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->body = file_get_contents('php://input');
-        $this->headers = \getallheaders();
+        $this->headers = getallheaders();
         $this->requestTime = $_SERVER['REQUEST_TIME'];
-        $this->queryParameters = $this->parsedUrl['query'] ?? [];
-        $this->anchor = $this->parsedUrl['anchor'] ?? '';
+        $this->queryParameters = $_GET;
+        $this->postParameters = $_POST;
         $this->host = $this->parsedUrl['host'];
+        $this->params = [];
     }
 
     public static function getFullUrl()
