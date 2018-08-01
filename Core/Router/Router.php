@@ -50,22 +50,9 @@ class Router implements RouterContract
         $dispatcher->run();
     }
 
-    public function on($code, $callback)
+    public function on($event, $callback)
     {
-        switch($code) {
-            case 404:
-                $this->on[404] = $callback;
-            break;
-            case 403:
-                $this->on[403] = $callback;
-            break;
-            case 400:
-                $this->on[400] = $callback;
-            break;
-            case 500:
-                $this->on[500] = $callback;
-            break;
-        }
+        $this->on[$event] = $callback;
 
         return $this;
     }
