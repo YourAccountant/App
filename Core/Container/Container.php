@@ -29,10 +29,9 @@ class Container implements ContainerContract
      */
     public function run($key, $args = [])
     {
-        list($class, $method) = preg_split("/\@|\./", $key);
+        list($class, $method) = explode(".", $key);
 
-        $instance = $this->get($class);
-        return \call_user_func_array([$instance, $method], $args);
+        return \call_user_func_array([$this->get($class), $method], $args);
     }
 
     /**
