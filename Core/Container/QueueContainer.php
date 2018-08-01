@@ -41,8 +41,7 @@ class QueueContainer
      */
     public function commit()
     {
-        foreach ($this->queue as $queue)
-        {
+        foreach ($this->queue as $queue) {
             $this->services->run($queue['key'], $queue['args']);
         }
 
