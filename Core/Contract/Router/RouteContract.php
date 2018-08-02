@@ -4,6 +4,7 @@ namespace Core\Contract\Router;
 
 interface RouteContract
 {
+    public function __construct(string $method, string $route, array $middleware = [], $callback);
 
-    // public function __construct(string $method, string $route, array $middleware = [], $callbck);
+    public function match($path);
 }
