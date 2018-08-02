@@ -38,7 +38,7 @@ class Route implements RouteContract
         return $this;
     }
 
-    public function setPattern()
+    private function setPattern()
     {
         $pattern = "";
         $params = explode('/', $this->route . '/');
@@ -54,7 +54,11 @@ class Route implements RouteContract
                 $pattern .= "\/[0-9A-Zaz]";
             }
         }
-        $pattern .= "\/";
-        $this->pattern = $pattern;
+        $this->pattern = $pattern != "" ? $pattern : "\/";
+    }
+
+    public function match($path)
+    {
+        return preg_match("/^{$this->pattern}$/", '/'.trim($path, '/')) ? true : false;
     }
 }

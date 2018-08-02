@@ -27,11 +27,11 @@ class Dispatcher implements DispatcherContract
 
     public $router;
 
-    public function __construct(RouterContract $router, ContainerContract $services = null, ContainerContract $controllers = null)
+    public function __construct(RouterContract $router)
     {
         $this->router = $router;
-        $this->services = $services;
-        $this->controllers = $controllers;
+        $this->services = $this->router->getServices();
+        $this->controllers = $this->router->getControllers();
         $this->request = new Request();
     }
 
@@ -39,7 +39,7 @@ class Dispatcher implements DispatcherContract
     {
         $this->response = new Response();
         foreach ($this->router->routes[$this->request->method] as $route) {
-            if (!$this->match($route)) {
+            if (!$route->match($this->request->path)) {
                 continue;
             }
 
@@ -56,7 +56,7 @@ class Dispatcher implements DispatcherContract
         $this->response->setBack($this->request->fullUrl);
     }
 
-    public function execAfter()
+    private function execAfter()
     {
         $code = $this->response->code;
         $call = $this->router->on[$code] ?? null;
@@ -69,7 +69,7 @@ class Dispatcher implements DispatcherContract
         }
     }
 
-    public function execRoute($route)
+    private function execRoute($route)
     {
         $this->createParams($route);
         $this->execMiddleware($route->middleware);
@@ -85,7 +85,7 @@ class Dispatcher implements DispatcherContract
         }
     }
 
-    public function execMiddleware($middlewares)
+    private function execMiddleware($middlewares)
     {
         if (!empty($middlewares)) {
             foreach ($middlewares as $middleware) {
@@ -102,7 +102,7 @@ class Dispatcher implements DispatcherContract
         }
     }
 
-    public function createParams($route)
+    private function createParams($route)
     {
         $params = [];
         $keys = explode('/', $this->request->path);
@@ -115,12 +115,6 @@ class Dispatcher implements DispatcherContract
         $this->request->params = $params;
 
         return $params;
-    }
-
-    public function match($route)
-    {
-        $path = $this->request->path == "/" ? "/" : '/' . trim($this->request->path, '/') . '/';
-        return preg_match("/^{$route->pattern}$/", $path) ? true : false;
     }
 
 }

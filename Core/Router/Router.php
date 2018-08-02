@@ -24,6 +24,16 @@ class Router implements RouterContract
         $this->services = $services;
     }
 
+    public function getServices()
+    {
+        return $this->services;
+    }
+
+    public function getControllers()
+    {
+        return $this->controllers;
+    }
+
     public function setPrefix($prefix)
     {
         $this->prefix = '/' . trim($prefix, '/');
@@ -46,7 +56,7 @@ class Router implements RouterContract
 
     public function dispatch()
     {
-        $dispatcher = new Dispatcher($this, $this->services, $this->controllers);
+        $dispatcher = new Dispatcher($this);
         $dispatcher->run();
     }
 
