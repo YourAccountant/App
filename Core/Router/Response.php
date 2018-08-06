@@ -39,7 +39,7 @@ class Response
             setcookie($name, $value);
         }
 
-        echo $this->content;
+        echo $this->content ?? "";
     }
 
     public function setCode($code)

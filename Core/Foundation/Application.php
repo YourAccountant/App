@@ -5,6 +5,7 @@ namespace Core\Foundation;
 use \Core\Config\Config;
 use \Core\Cache\Cache;
 use \Core\Container\Container;
+use \Core\Router\Router;
 
 class Application
 {
@@ -127,10 +128,15 @@ class Application
         }
     }
 
+    public function setViews()
+    {
+        return $this;
+    }
+
     public function run()
     {
-        echo '<pre>';
-        print_r($this);
-        echo '</pre>';
+        Router::setControllers($this->controllers);
+        Router::setPolicies($this->policies);
+        Router::dispatch();
     }
 }

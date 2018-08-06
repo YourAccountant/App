@@ -7,89 +7,80 @@ use \Core\Contract\Container\ContainerContract;
 
 class Router implements RouterContract
 {
+    private static $routes = [];
 
-    private $services;
+    private static $controllers;
 
-    private $controllers;
+    private static $policies;
 
-    private $prefix = '';
+    private static $prefix = '';
 
-    private $middleware = [];
+    private static $middleware = [];
 
-    public $on = [];
+    private static $on = [];
 
-    public function __construct($controllers = null, $services = null)
+    public static function setControllers($controllers)
     {
-        $this->controllers = $controllers;
-        $this->services = $services;
+        self::$controllers = $controllers;
     }
 
-    public function getServices()
+    public static function setPolicies($policies)
     {
-        return $this->services;
+        self::$policies = $policies;
     }
 
-    public function getControllers()
+    public static function setPrefix($prefix)
     {
-        return $this->controllers;
+        self::$prefix = '/' . trim($prefix, '/');
     }
 
-    public function setPrefix($prefix)
+    public static function setMiddleware($middleware = [])
     {
-        $this->prefix = '/' . trim($prefix, '/');
-        return $this;
+        self::$middleware = $middleware;
     }
 
-    public function setMiddleware($middleware = [])
+    public static function addRoute($method, $route, $callback)
     {
-        $this->middleware = $middleware;
-        return $this;
-    }
-
-    public function addRoute($method, $route, $callback)
-    {
-        $instance = new Route($method, $this->prefix . '/' . trim($route, '/'), $this->middleware, $callback);
-        $this->routes[$method][] = $instance;
+        $instance = new Route($method, self::$prefix . '/' . trim($route, '/'), self::$middleware, $callback);
+        self::$routes[$method][] = $instance;
 
         return $instance;
     }
 
-    public function dispatch()
+    public static function dispatch()
     {
-        $dispatcher = new Dispatcher($this);
+        $dispatcher = new Dispatcher(self::$routes, self::$controllers, self::$policies, self::$on);
         $dispatcher->run();
     }
 
-    public function on($event, $callback)
+    public static function on($event, $callback)
     {
-        $this->on[$event] = $callback;
-
-        return $this;
+        self::$on[$event] = $callback;
     }
 
-    public function get($route, $callback)
+    public static function get($route, $callback)
     {
-        return $this->addRoute('GET', $route, $callback);
+        return self::addRoute('GET', $route, $callback);
     }
 
-    public function post($route, $callback)
+    public static function post($route, $callback)
     {
-        return $this->addRoute('POST', $route, $callback);
+        return self::addRoute('POST', $route, $callback);
     }
 
-    public function put($route, $callback)
+    public static function put($route, $callback)
     {
-        return $this->addRoute('PUT', $route, $callback);
+        return self::addRoute('PUT', $route, $callback);
     }
 
-    public function patch($route, $callback)
+    public static function patch($route, $callback)
     {
-        return $this->addRoute('PATCH', $route, $callback);
+        return self::addRoute('PATCH', $route, $callback);
     }
 
-    public function delete($route, $callback)
+    public static function delete($route, $callback)
     {
-        return $this->addRoute('DELETE', $route, $callback);
+        return self::addRoute('DELETE', $route, $callback);
     }
 
 }

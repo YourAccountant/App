@@ -18,27 +18,27 @@ response->setBack
 */
 class Dispatcher implements DispatcherContract
 {
+    private $routes;
 
-    private $services;
+    private $controllers;
 
     public $request;
 
     public $response;
 
-    public $router;
-
-    public function __construct(RouterContract $router)
+    public function __construct($routes, $controllers = null, $policies = null, $on = null)
     {
-        $this->router = $router;
-        $this->services = $this->router->getServices();
-        $this->controllers = $this->router->getControllers();
+        $this->routes = $routes;
+        $this->controllers = $controllers;
+        $this->policies = $policies;
+        $this->on = $on;
         $this->request = new Request();
     }
 
     public function run()
     {
         $this->response = new Response();
-        foreach ($this->router->routes[$this->request->method] as $route) {
+        foreach ($this->routes[$this->request->method] as $route) {
             if (!$route->match($this->request->path)) {
                 continue;
             }
@@ -59,12 +59,12 @@ class Dispatcher implements DispatcherContract
     private function execAfter()
     {
         $code = $this->response->code;
-        $call = $this->router->on[$code] ?? null;
+        $call = $this->on[$code] ?? null;
         if ($call != null) {
             if (is_callable($call)) {
                 $call($this->request, $this->response);
             } else {
-                $this->services->run($call, [$this->request, $this->response]);
+                $this->policies->run($call, [$this->request, $this->response]);
             }
         }
     }
@@ -92,7 +92,7 @@ class Dispatcher implements DispatcherContract
                 if (is_callable($middleware)) {
                     $middleware($this->request, $this->response);
                 } else {
-                    $this->services->run($middleware, [$this->request, $this->response]);
+                    $this->policies->run($middleware, [$this->request, $this->response]);
                 }
 
                 if (!$this->response->hasResponse()) {
