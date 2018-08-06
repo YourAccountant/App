@@ -2,13 +2,16 @@
 
 namespace Core\Foundation;
 
-class Controller
+use \Core\Contract\Foundation\DependsOnApp;
+
+class Controller implements DependsOnApp
 {
 
     protected $app;
 
-    public function __construct(Application $app)
+    public function setApp(Application $app)
     {
         $this->app = $app;
+        return $this;
     }
 }

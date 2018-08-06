@@ -67,7 +67,9 @@ class Application
         $classname = explode("\\", $namespace);
         $classname = end($classname);
 
-        $instance = new $namespace($this);
+        $instance = new $namespace();
+        $instance->setApp($this);
+
         $name = $instance->alias ?? $classname;
 
         if (is_subclass_of($namespace, Service::class)) {

@@ -2,14 +2,17 @@
 
 namespace Core\Foundation;
 
-class Service
+use \Core\Contract\Foundation\DependsOnApp;
+
+class Service implements DependsOnApp
 {
 
     protected $app;
 
-    public function __construct(Application $app)
+    public function setApp(Application $app)
     {
         $this->app = $app;
+        return $this;
     }
 
 }

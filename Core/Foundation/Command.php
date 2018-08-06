@@ -2,13 +2,16 @@
 
 namespace Core\Foundation;
 
-abstract class Command
+use \Core\Contract\Foundation\DependsOnApp;
+
+abstract class Command implements DependsOnApp
 {
     protected $app;
 
-    public function __construct(Application $app)
+    public function setApp(Application $app)
     {
-        $this->$app = $app;
+        $this->app = $app;
+        return $this;
     }
 
     abstract public function run($data = null);
