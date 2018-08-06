@@ -1,0 +1,7 @@
+<?php
+
+$port = $argv[1] ?? 8000;
+
+echo "Serving application on http://localhost:$port\n";
+echo shell_exec("php -S localhost:$port bootstrap.php");
+
