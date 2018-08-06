@@ -7,6 +7,7 @@ use \Core\Cache\Cache;
 use \Core\Container\Container;
 use \Core\Router\Router;
 use \Core\Debug\Debug;
+use \Core\Database\Connection;
 
 class Application
 {
@@ -60,6 +61,14 @@ class Application
         $instance = new Debug($path);
         $instance->setApp($this);
         $this->services->add('Debugger', $instance);
+        return $this;
+    }
+
+    public function setConnection()
+    {
+        $instance = new Connection($this->dependencies->get('Config'));
+        $instance->connect();
+        $this->dependencies->add('Connection', $instance);
         return $this;
     }
 
