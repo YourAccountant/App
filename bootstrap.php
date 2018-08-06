@@ -11,4 +11,5 @@ $app = (new Application(__DIR__))
     ->setCache('.cache')
     ->setApp('App')
     ->setViews('views')
+    ->setDebug('log')
     ->run();

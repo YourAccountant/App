@@ -6,26 +6,25 @@ use \Core\Config\Config;
 use \Core\Cache\Cache;
 use \Core\Container\Container;
 use \Core\Router\Router;
+use \Core\Debug\Debug;
 
 class Application
 {
     const VERSION = '0.1';
 
-    protected $root;
+    public $root;
 
-    protected $services;
+    public $dependencies;
 
-    protected $controllers;
+    public $services;
 
-    protected $commands;
+    public $controllers;
 
-    protected $policies;
+    public $commands;
 
-    protected $caught;
+    public $policies;
 
-    protected $config;
-
-    protected $cache;
+    public $caught;
 
     public function __construct($root)
     {
@@ -53,6 +52,14 @@ class Application
     public function setView($path)
     {
         $this->views = null; // new ViewProvider($path);
+        return $this;
+    }
+
+    public function setDebug($path)
+    {
+        $instance = new Debug($path);
+        $instance->setApp($this);
+        $this->services->add('Debugger', $instance);
         return $this;
     }
 
