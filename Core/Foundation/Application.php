@@ -8,6 +8,7 @@ use \Core\Container\Container;
 use \Core\Router\Router;
 use \Core\Debug\Debug;
 use \Core\Database\Connection;
+use \Core\Database\Migration\Migration;
 
 class Application
 {
@@ -25,9 +26,9 @@ class Application
 
     public $policies;
 
-    public $caught;
+    public $misc;
 
-    public function __construct($root)
+    public function __construct($root, $auto = true)
     {
         $this->root = $root;
         $this->dependencies = new Container();
@@ -35,7 +36,23 @@ class Application
         $this->controllers = new Container();
         $this->policies = new Container();
         $this->commands = new Container();
-        $this->caught = new Container();
+        $this->misc = new Container();
+
+        if ($auto) {
+            $this->initialize();
+        }
+    }
+
+    public function initialize()
+    {
+        $this->setConfig(".config");
+        $this->setApp("App");
+        $this->setCache(".cache");
+        $this->setView("views");
+        $this->setConnection();
+        $this->setDebug("log");
+        $this->setMisc();
+        return $this;
     }
 
     public function setCache($path)
@@ -78,6 +95,14 @@ class Application
         return $this;
     }
 
+    public function setMisc()
+    {
+        Router::setControllers($this->controllers);
+        Router::setPolicies($this->policies);
+        Migration::setConnection($this->dependencies->get('Connection'));
+        return $this;
+    }
+
     private function addService($namespace)
     {
         $classname = explode("\\", $namespace);
@@ -96,8 +121,6 @@ class Application
             $this->controllers->add($name, $instance);
         } elseif (is_subclass_of($namespace, Command::class)) {
             $this->commands->add($name, $instance);
-        } else {
-            $this->caught->add($name, $instance);
         }
 
         return $instance;
@@ -146,15 +169,8 @@ class Application
         }
     }
 
-    public function setViews()
-    {
-        return $this;
-    }
-
     public function run()
     {
-        Router::setControllers($this->controllers);
-        Router::setPolicies($this->policies);
         Router::dispatch();
     }
 }

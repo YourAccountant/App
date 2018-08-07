@@ -28,12 +28,14 @@ class Connection
     public function connect()
     {
         try {
-
             $this->connection = new PDO("mysql:host={$this->host};port={$this->port};dbname={$this->database};",
                 $this->user,
                 $this->pass,
                 [
-                    PDO::ATTR_PERSISTENT => true
+                    PDO::ATTR_PERSISTENT => true,
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES   => false
                 ]
             );
 
@@ -42,6 +44,21 @@ class Connection
             die($e->getMessage());
             return false;
         }
+    }
+
+    public function query($sql)
+    {
+        try {
+            $this->connection->query($sql);
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function builder($table)
+    {
+        return new Builder($this, $table);
     }
 
     public function get()

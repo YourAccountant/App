@@ -2,71 +2,36 @@
 
 namespace Core\Database\Migration;
 
+use \Core\Database\Connection;
+
 class Migration
 {
+    private static $connection;
 
-    public $table;
+    private static $tables = [];
 
-    public $charset;
-
-    public $columns;
-
-    public $engine = "INNODB";
-
-    public function __construct($table)
+    public static function setConnection(Connection $connection)
     {
-        $this->table = $table;
+        self::$connection = $connection;
     }
 
-    public function add($name, $type = null, $length = null)
+    public static function table($name)
     {
-        $column = new Column($name, $type, $length);
-        $this->columns[] = $column;
-        return $column;
+        $table = new Table($name);
+        self::$tables[$name] = $table;
+        return $table;
     }
 
-    public function getSql()
+    public static function create()
     {
-        $primary = "";
-        $indexes = [];
-        $relations = [];
-        $sql = " CREATE TABLE {$this->table} ( \n";
-        foreach ($this->columns as $column) {
-            if ($column->primary) {
-                $primary = $column->name;
-            }
-
-            if ($column->index) {
-                $indexes[] = $column->name;
-            }
-
-            if (!empty($column->relations)) {
-                $relations[$column->name] = $column->relations;
-            }
-
-            $sql .= $column->generate() . ",\n";
+        foreach (self::$tables as $name => $table) {
+            $sql = $table->create();
+            self::$connection->query($sql);
         }
+    }
 
-        if ($primary != null) {
-            $sql .= " PRIMARY KEY ($primary), \n";
-        }
-
-        if (!empty($indexes)) {
-            $sql .= " INDEX (".trim(implode(',', $indexes), ',')."), \n";
-        }
-
-        foreach ($relations as $name => $columnRelations) {
-            foreach ($columnRelations as $relation) {
-                list($fkTable, $fkColumn) = explode('.', $relation);
-                $sql .= " FOREIGN KEY ({$name}) REFERENCES {$fkTable}({$fkColumn}), \n";
-            }
-        }
-
-        $sql = rtrim(trim($sql), ',');
-
-        $sql .= ") ENGINE={$this->engine};\n";
-
-        return $sql;
+    public static function sort($order) {
+        self::$tables = array_merge(array_flip($order), self::$tables);
     }
 
 }
