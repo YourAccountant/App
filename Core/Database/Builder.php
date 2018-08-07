@@ -137,6 +137,14 @@ class Builder
         return $this;
     }
 
+    public function raw($sql, $prepares)
+    {
+        $this->type = 'raw';
+        $this->raw = $sql;
+        $this->prepares = $prepares;
+        return $this;
+    }
+
     public function prepareData($data = null)
     {
         $data = $data ?? $this->data;
@@ -169,8 +177,10 @@ class Builder
 
     public function exec()
     {
-        $this->prepareData();
-        $this->prepareWhere();
+        if ($this->type != 'raw') {
+            $this->prepareData();
+            $this->prepareWhere();
+        }
 
         return new Query($this->connection, $this);
     }

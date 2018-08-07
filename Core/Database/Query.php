@@ -61,6 +61,8 @@ class Query
                 }
                 return $this->delete();
                 break;
+            case 'raw':
+                return $this->builder->raw;
             default:
                 return;
                 break;
