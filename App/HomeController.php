@@ -10,4 +10,9 @@ class HomeController extends \Core\Foundation\Controller
         $res->send("Hello!");
     }
 
+    public function test($req, $res)
+    {
+        $builder = $this->app->dependencies->get('Connection')->builder("users");
+    }
+
 }

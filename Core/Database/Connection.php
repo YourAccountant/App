@@ -46,14 +46,11 @@ class Connection
         }
     }
 
-    public function query($sql)
+    public function query($sql, $prepares = [])
     {
-        try {
-            $this->connection->query($sql);
-            return true;
-        } catch (Exception $e) {
-            return false;
-        }
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute($prepares);
+        return $stmt;
     }
 
     public function builder($table)
