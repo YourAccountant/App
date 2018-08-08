@@ -9,6 +9,7 @@ use \Core\Router\Router;
 use \Core\Debug\Debug;
 use \Core\Database\Connection;
 use \Core\Database\Migration\Migration;
+use \Core\View\ViewProvider;
 
 class Application
 {
@@ -52,7 +53,7 @@ class Application
         $this->setConfig(".config");
         $this->setApp("App");
         $this->setCache(".cache");
-        $this->setView("views");
+        $this->setView("views", "layout.php");
         $this->setConnection();
         $this->setDebug("log");
         $this->setMisc();
@@ -71,9 +72,9 @@ class Application
         return $this;
     }
 
-    public function setView($path)
+    public function setView($path, $layout = null)
     {
-        $this->views = null; // new ViewProvider($path);
+        $this->views = new ViewProvider(rtrim($this->root, '/') . '/' . trim($path, '/'), $layout);
         return $this;
     }
 

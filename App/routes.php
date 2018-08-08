@@ -6,6 +6,4 @@ use \Core\Database\QueryBuilder;
 use \Core\Database\Generator;
 
 
-Router::get("/migration", "HomeController.test2");
-
-Router::get('/query', 'HomeController.test');
+Router::get('home', "HomeController.show");
