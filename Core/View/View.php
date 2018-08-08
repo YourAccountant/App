@@ -29,7 +29,8 @@ class View
             $content = ViewProvider::getContent($matches['content']);
             $view = new View($content);
             $view->compile();
-            $this->template = preg_replace($pattern, $view->template, $this->template);
+            $this->template = preg_replace($pattern, $view->template, $this->template, 1);
+            $this->compile();
         }
 
         return $this->template;

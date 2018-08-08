@@ -7,6 +7,8 @@
     <title>Document</title>
 </head>
 <body>
+    @include('components/header.php');
     @setContent();
+    @include('components/footer.php');
 </body>
 </html>

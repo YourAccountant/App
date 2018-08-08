@@ -25,7 +25,8 @@ class ViewProvider
         $layout = trim($view->getLayout());
 
         if ($layout != null) {
-            $layout = new Layout(self::getContent($layout));
+            $layoutContent = (new View(self::getContent($layout)))->compile();
+            $layout = new Layout($layoutContent);
             $this->content = $layout->compile($view);
         } else {
             $this->content = $view->compile();
