@@ -24,8 +24,8 @@ class Bootable
         return Application::$instance->policies;
     }
 
-    protected function serveView($view)
+    protected function serveView($view, $data = [])
     {
-        return Application::$instance->views->compile($view);
+        return Application::$instance->views->compile($view, $data);
     }
 }

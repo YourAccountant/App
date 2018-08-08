@@ -1,4 +1,4 @@
 @layout('layout.php');
 
-<h1>Hiiiii</h1>
+<h1>{{ title }}</h1>
 @include('page.php');

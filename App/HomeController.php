@@ -7,7 +7,9 @@ class HomeController extends \Core\Foundation\Controller
 
     public function show($req, $res)
     {
-        $res->send($this->serveView("home.php"));
+        $res->send($this->serveView("home.php", [
+            'title' => 'home'
+        ]));
     }
 
 }

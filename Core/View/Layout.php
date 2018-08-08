@@ -10,9 +10,9 @@ class Layout
         $this->template = $template;
     }
 
-    public function compile(View $view)
+    public function compile(View $view, $data)
     {
-        $content = $view->compile();
+        $content = $view->compile($data);
         $this->template = preg_replace("/\@setContent\(\);/", $content, $this->template);
         return $this->template;
     }
