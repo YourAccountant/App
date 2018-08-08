@@ -2,7 +2,7 @@
 
 namespace Core\Database;
 
-class Builder
+class QueryBuilder
 {
     private $connection;
 
@@ -12,7 +12,7 @@ class Builder
 
     public $table;
 
-    public $select = '*';
+    public $columns = '*';
 
     public $where = [];
 
@@ -34,9 +34,9 @@ class Builder
         $this->table = $table;
     }
 
-    public function select($select)
+    public function columns($columns)
     {
-        $this->select = $select;
+        $this->columns = $columns;
         return $this;
     }
 
@@ -145,7 +145,7 @@ class Builder
         return $this;
     }
 
-    public function prepareData($data = null)
+    private function prepareData($data = null)
     {
         $data = $data ?? $this->data;
 
@@ -160,7 +160,7 @@ class Builder
         return $this;
     }
 
-    public function prepareWhere($data = null)
+    private function prepareWhere($data = null)
     {
         $data = $data ?? $this->where;
 

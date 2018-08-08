@@ -14,15 +14,17 @@ class Query
 
     private $prepares = [];
 
-    public $safety = true;
+    public $safety;
 
     private $stmt;
 
-    public function __construct(Connection $connection, Builder $builder)
+    public function __construct(Connection $connection, QueryBuilder $builder, $safety = true)
     {
+        $this->safety = $safety;
         $this->connection = $connection;
         $this->builder = $builder;
         $sql = $this->route($builder->type);
+
         if ($sql !== false) {
             $this->stmt = $this->connection->query($sql, $this->builder->prepares);
         } else {
@@ -92,7 +94,7 @@ class Query
     public function select()
     {
         $sql = "";
-        $sql .= Generator::select($this->builder->table, $this->builder->select);
+        $sql .= Generator::select($this->builder->table, $this->builder->columns);
         $sql .= Generator::join($this->builder->table, $this->builder->join);
         $sql .= Generator::where($this->builder->where);
         $sql .= Generator::orderBy($this->builder->orderBy);

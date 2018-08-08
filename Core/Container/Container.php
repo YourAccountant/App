@@ -3,6 +3,7 @@
 namespace Core\Container;
 
 use \Core\Contract\Container\ContainerContract;
+use \Core\Foundation\Application;
 
 class Container implements ContainerContract
 {
@@ -44,7 +45,21 @@ class Container implements ContainerContract
             throw new NotFound("$key not found");
         }
 
-        return $this->instances[$key];
+        $instance = $this->instances[$key];
+
+        if (is_string($instance)) {
+            $instance = new $instance();
+            if (method_exists($instance, "inject")) {
+                $instance->inject(Application::$instance);
+            }
+            if (method_exists($instance, "boot")) {
+                $instance->boot(Application::$instance);
+            }
+        }
+
+        $this->instances[$key] = $instance;
+
+        return $instance;
     }
 
     /**

@@ -2,17 +2,6 @@
 
 namespace Core\Foundation;
 
-use \Core\Contract\Foundation\DependsOnApp;
-
-class Service implements DependsOnApp
+class Service extends Bootable
 {
-
-    protected $app;
-
-    public function setApp(Application $app)
-    {
-        $this->app = $app;
-        return $this;
-    }
-
 }

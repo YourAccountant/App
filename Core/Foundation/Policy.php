@@ -2,16 +2,6 @@
 
 namespace Core\Foundation;
 
-use \Core\Contract\Foundation\DependsOnApp;
-
-class Policy implements DependsOnApp
+class Policy extends Bootable
 {
-
-    protected $app;
-
-    public function setApp(Application $app)
-    {
-        $this->app = $app;
-        return $this;
-    }
 }

@@ -7,30 +7,37 @@ use \Core\Config\Config;
 
 class Connection
 {
+    private static $instance;
 
-    private $connection;
+    private static $connection;
 
-    public function __construct(Config $config)
+    private static $config;
+
+    public static function boot(Config $config)
     {
-        $this->config = $config;
-        $this->host = $this->config->dbHost;
-        $this->port = $this->config->dbPort;
-        $this->database = $this->config->dbDatabase;
-        $this->user = $this->config->dbUser;
-        $this->pass = $this->config->dbPass;
+        self::$config = $config;
+        self::connect();
     }
 
-    public function hasConnection()
+    public function __construct()
     {
-        return $this->connection != null;
+        if (self::$instance == null)
+        {
+            self::$instance = $this;
+        }
     }
 
-    public function connect()
+    public static function hasConnection()
+    {
+        return self::$connection != null;
+    }
+
+    public static function connect()
     {
         try {
-            $this->connection = new PDO("mysql:host={$this->host};port={$this->port};dbname={$this->database};",
-                $this->user,
-                $this->pass,
+            self::$connection = new PDO("mysql:host=".self::$config->dbHost.";port=".self::$config->dbPort.";dbname=".self::$config->dbDatabase.";",
+                self::$config->dbUser,
+                self::$config->dbPass,
                 [
                     PDO::ATTR_PERSISTENT => true,
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -46,21 +53,26 @@ class Connection
         }
     }
 
+    public static function getInstance()
+    {
+        return self::$instance;
+    }
+
+    public static function builder($table)
+    {
+        return new QueryBuilder(self::getInstance(), $table);
+    }
+
     public function query($sql, $prepares = [])
     {
-        $stmt = $this->connection->prepare($sql);
+        $stmt = self::$connection->prepare($sql);
         $stmt->execute($prepares);
         return $stmt;
     }
 
-    public function builder($table)
-    {
-        return new Builder($this, $table);
-    }
-
     public function get()
     {
-        return $this->connection;
+        return self::$connection;
     }
 
 }

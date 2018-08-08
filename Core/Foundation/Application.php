@@ -14,22 +14,26 @@ class Application
 {
     const VERSION = '0.1';
 
-    public $root;
+    public static $instance;
 
-    public $dependencies;
+    protected $root;
 
-    public $services;
+    protected $dependencies;
 
-    public $controllers;
+    protected $services;
 
-    public $commands;
+    protected $controllers;
 
-    public $policies;
+    protected $commands;
 
-    public $misc;
+    protected $policies;
+
+    protected $misc;
 
     public function __construct($root, $auto = true)
     {
+        self::$instance = $this;
+
         $this->root = $root;
         $this->dependencies = new Container();
         $this->services = new Container();
@@ -83,9 +87,8 @@ class Application
 
     public function setConnection()
     {
-        $instance = new Connection($this->dependencies->get('Config'));
-        $instance->connect();
-        $this->dependencies->add('Connection', $instance);
+        Connection::boot($this->dependencies->get('Config'));
+        $this->dependencies->add('Connection', new Connection());
         return $this;
     }
 
@@ -97,9 +100,9 @@ class Application
 
     public function setMisc()
     {
+        Migration::setConnection($this->dependencies->get('Connection'));
         Router::setControllers($this->controllers);
         Router::setPolicies($this->policies);
-        Migration::setConnection($this->dependencies->get('Connection'));
         return $this;
     }
 
@@ -108,22 +111,21 @@ class Application
         $classname = explode("\\", $namespace);
         $classname = end($classname);
 
-        $instance = new $namespace();
-        $instance->setApp($this);
-
         $name = $instance->alias ?? $classname;
 
         if (is_subclass_of($namespace, Service::class)) {
-            $this->services->add($name, $instance);
+            $this->services->add($name, $namespace);
         } elseif (is_subclass_of($namespace, Policy::class)) {
-            $this->policies->add($name, $instance);
+            $this->policies->add($name, $namespace);
         } elseif (is_subclass_of($namespace, Controller::class)) {
-            $this->controllers->add($name, $instance);
+            $this->controllers->add($name, $namespace);
         } elseif (is_subclass_of($namespace, Command::class)) {
-            $this->commands->add($name, $instance);
+            $this->commands->add($name, $namespace);
+        } else {
+            return false;
         }
 
-        return $instance;
+        return true;
     }
 
     public function getNamespace($path)
@@ -161,11 +163,7 @@ class Application
                 continue;
             }
 
-            $instance = $this->addService($namespace);
-
-            if (method_exists($instance, "boot")) {
-                $instance->boot();
-            }
+            $this->addService($namespace);
         }
     }
 

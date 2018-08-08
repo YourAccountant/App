@@ -2,16 +2,8 @@
 
 namespace Core\Foundation;
 
-use \Core\Contract\Foundation\DependsOnApp;
+use \Core\Database\Connection;
 
-class Model implements DependsOnApp
+class Model extends Bootable
 {
-
-    protected $app;
-
-    public function setApp(Application $app)
-    {
-        $this->app = $app;
-        return $this;
-    }
 }
