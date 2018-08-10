@@ -52,14 +52,13 @@ class Dispatcher implements DispatcherContract
             break;
         }
 
-
         if (!$this->found) {
             $this->response->code = 404;
         }
 
         $this->execAfter();
         $this->response->run();
-        $this->response->setBack($this->request->fullUrl);
+        Response::setBack();
     }
 
     private function execAfter()

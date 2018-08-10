@@ -15,13 +15,14 @@ class HomeController extends \Core\Foundation\Controller
             ->get(1)
             ->fetch();
 
-        echo '<pre>';
-        print_r(Debug::get());
-        echo '</pre>';
-
         $res->view("home.php", "layout.php", [
             'title' => $this->getDependencies()->get('Config')->name,
             'user' => $user
         ]);
+    }
+
+    public function x($req, $res)
+    {
+        $res->send(['true' => 'false']);
     }
 }

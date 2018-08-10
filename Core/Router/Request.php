@@ -28,6 +28,8 @@ class Request
 
     public $params;
 
+    public $back;
+
     public function __construct()
     {
         $this->fullUrl = self::getFullUrl();
@@ -42,13 +44,9 @@ class Request
         $this->postParameters = $_POST;
         $this->host = $this->parsedUrl['host'];
         $this->params = [];
+        $this->back = $_SESSION['app']['back'] ?? null;
 
-        Debug::add('routing', 'request', [
-            'url' => $this->parsedUrl,
-            'headers' => $this->headers,
-            'method' => $this->method,
-            'requestBody' => file_get_contents('php://input')
-        ]);
+        Debug::add('routing', 'request', get_object_vars($this));
     }
 
     public static function getFullUrl()

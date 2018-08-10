@@ -86,9 +86,8 @@ class Response
         self::redirect($_SESSION['app']['back']);
     }
 
-    public static function setBack($url)
+    public static function setBack()
     {
-        $_SESSION['app']['back'] = $url;
-        return $url;
+        $_SESSION['app']['back'] = Request::getFullUrl();
     }
 }
