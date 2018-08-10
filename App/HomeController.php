@@ -19,6 +19,10 @@ class HomeController extends \Core\Foundation\Controller
             'title' => $this->getDependencies()->get('Config')->name,
             'user' => $user
         ]);
+
+        echo '<pre>';
+        print_r([$_SERVER, Debug::get()]);
+        echo '</pre>';
     }
 
     public function x($req, $res)

@@ -11,6 +11,7 @@ use \Core\Debug\Logger;
 use \Core\Database\Connection;
 use \Core\Database\Migration\Migration;
 use \Core\Template\View;
+use \Core\Cdn\CdnProvider;
 
 class Application
 {
@@ -54,6 +55,7 @@ class Application
         $this->setDebug("log");
         $this->setConfig(".config");
         $this->setApp("App");
+        $this->setCdnProvider();
         $this->setCache(".cache");
         $this->setConnection();
         $this->setMisc();
@@ -84,6 +86,14 @@ class Application
     {
         Connection::boot($this->dependencies->get('Config'));
         $this->dependencies->add('Connection', new Connection());
+        return $this;
+    }
+
+    public function setCdnProvider()
+    {
+        $cdn = new CdnProvider();
+        $cdn->boot();
+        $this->dependencies->add('Cdn', $cdn);
         return $this;
     }
 

@@ -6,6 +6,11 @@ use \Core\Template\View;
 
 class Bootable
 {
+    protected function getRoot()
+    {
+        return Application::$instance->root;
+    }
+
     protected function getServices()
     {
         return Application::$instance->services;
