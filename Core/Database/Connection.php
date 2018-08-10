@@ -13,6 +13,8 @@ class Connection
 
     private static $config;
 
+    private static $hooks = [];
+
     public static function boot(Config $config)
     {
         self::$config = $config;
@@ -45,12 +47,36 @@ class Connection
                     PDO::ATTR_EMULATE_PREPARES   => false
                 ]
             );
-
-            return true;
         } catch (\PDOException $e) {
+            self::hook("connect", false);
             die($e->getMessage());
             return false;
         }
+
+        self::hook("connect", true);
+
+        return true;
+    }
+
+    private static function hook($hook, ...$args)
+    {
+        if (!isset(self::$hooks[$hook])) {
+            return;
+        }
+
+        foreach (self::$hooks[$hook] as $callback) {
+            \call_user_func_array($callback, $args);
+        }
+    }
+
+    public static function addHook($hook, $callback)
+    {
+        self::$hooks[$hook][] = $callback;
+    }
+
+    public static function getHooks()
+    {
+        return self::$hooks;
     }
 
     public static function getInstance()
@@ -65,6 +91,7 @@ class Connection
 
     public function query($sql, $prepares = [])
     {
+        self::hook("query", $sql, $prepares);
         $stmt = self::$connection->prepare($sql);
         $stmt->execute($prepares);
         return $stmt;

@@ -52,9 +52,9 @@ class Application
     {
         $this->setConfig(".config");
         $this->setApp("App");
+        $this->setDebug("log");
         $this->setCache(".cache");
         $this->setConnection();
-        $this->setDebug("log");
         $this->setMisc();
         return $this;
     }
@@ -74,7 +74,6 @@ class Application
     public function setDebug($path)
     {
         $instance = new Debug($path);
-        $instance->setApp($this);
         $this->services->add('Debugger', $instance);
         return $this;
     }

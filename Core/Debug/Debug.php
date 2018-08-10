@@ -2,29 +2,44 @@
 
 namespace Core\Debug;
 
-use \Core\Contract\Foundation\DependsOnApp;
-use \Core\Foundation\Application;
+use \DateTime;
 
-class Debug implements DependsOnApp
+class Debug
 {
 
     private $app;
 
     private $path;
 
-    private $queryDebugger;
+    public static $data;
+
+    private $database;
 
     private $logger;
 
     public function __construct($path)
     {
         $this->path = $path;
+        $this->database = new DatabaseDebugger();
     }
 
-    public function setApp(Application $app)
+    public static function add($type, $name, $params = [])
     {
-        $this->app = $app;
-        return $this;
+        $t = microtime(true);
+        $micro = sprintf("%06d",($t - floor($t)) * 1000000);
+        $d = new DateTime( date('Y-m-d H:i:s.'.$micro, $t) );
+
+        self::$data[strtolower($type)][strtolower($name)][$d->format("Y-m-d H:i:s.u")] = $params;
     }
 
+    public static function get($type = null, $name = null)
+    {
+        if ($type == null) {
+            return self::$data;
+        } else if ($name == null) {
+            return self::$data[$type];
+        } else {
+            return self::$data[$type][$name];
+        }
+    }
 }
