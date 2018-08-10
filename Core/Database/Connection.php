@@ -23,8 +23,7 @@ class Connection
 
     public function __construct()
     {
-        if (self::$instance == null)
-        {
+        if (self::$instance == null) {
             self::$instance = $this;
         }
     }
@@ -37,7 +36,8 @@ class Connection
     public static function connect()
     {
         try {
-            self::$connection = new PDO("mysql:host=".self::$config->dbHost.";port=".self::$config->dbPort.";dbname=".self::$config->dbDatabase.";",
+            self::$connection = new PDO(
+                "mysql:host=".self::$config->dbHost.";port=".self::$config->dbPort.";dbname=".self::$config->dbDatabase.";",
                 self::$config->dbUser,
                 self::$config->dbPass,
                 [
@@ -101,5 +101,4 @@ class Connection
     {
         return self::$connection;
     }
-
 }

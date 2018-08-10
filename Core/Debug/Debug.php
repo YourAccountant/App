@@ -26,8 +26,8 @@ class Debug
     public static function add($type, $name, $params = [])
     {
         $t = microtime(true);
-        $micro = sprintf("%06d",($t - floor($t)) * 1000000);
-        $d = new DateTime( date('Y-m-d H:i:s.'.$micro, $t) );
+        $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
+        $d = new DateTime(date('Y-m-d H:i:s.'.$micro, $t));
 
         self::$data[strtolower($type)][strtolower($name)][$d->format("Y-m-d H:i:s.u")] = $params;
     }
@@ -36,7 +36,7 @@ class Debug
     {
         if ($type == null) {
             return self::$data;
-        } else if ($name == null) {
+        } elseif ($name == null) {
             return self::$data[$type];
         } else {
             return self::$data[$type][$name];

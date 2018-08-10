@@ -95,5 +95,4 @@ class Table
 
         return $sql;
     }
-
 }

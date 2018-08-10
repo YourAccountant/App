@@ -97,5 +97,4 @@ class Response
         $_SESSION['app']['back'] = $url;
         return $url;
     }
-
 }

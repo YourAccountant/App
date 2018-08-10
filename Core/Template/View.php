@@ -40,8 +40,7 @@ class View
     public static function getViewContent()
     {
         $data = self::$data;
-        if (View::$view != null)
-        {
+        if (View::$view != null) {
             include View::$view;
         }
     }
@@ -72,5 +71,4 @@ class View
 
         echo $content;
     }
-
 }

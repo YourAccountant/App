@@ -152,5 +152,4 @@ class Column
 
         return " {$this->name} {$this->type}{$length} {$null} {$default} {$primary} ";
     }
-
 }

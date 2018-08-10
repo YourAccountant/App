@@ -82,5 +82,4 @@ class Router implements RouterContract
     {
         return self::addRoute('DELETE', $route, $callback);
     }
-
 }

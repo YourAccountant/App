@@ -7,7 +7,5 @@ class HomePolicies extends \Core\Foundation\Policy
 
     public function isAllowed($req, $res)
     {
-
     }
-
 }

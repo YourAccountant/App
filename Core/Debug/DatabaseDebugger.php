@@ -22,5 +22,4 @@ class DatabaseDebugger
     {
         Debug::add("Database", $name, $params);
     }
-
 }

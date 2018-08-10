@@ -76,8 +76,7 @@ class Dispatcher implements DispatcherContract
         $this->createParams($route);
         $this->execMiddleware($route->middleware);
 
-        if (!$this->response->hasResponse())
-        {
+        if (!$this->response->hasResponse()) {
             $callback = $route->callback;
             if (is_callable($callback)) {
                 $callback($this->request, $this->response);
@@ -118,5 +117,4 @@ class Dispatcher implements DispatcherContract
 
         return $params;
     }
-
 }

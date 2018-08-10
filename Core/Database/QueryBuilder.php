@@ -184,5 +184,4 @@ class QueryBuilder
 
         return new Query($this->connection, $this);
     }
-
 }

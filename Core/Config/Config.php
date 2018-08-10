@@ -29,8 +29,7 @@ class Config
     public function serialize()
     {
         $items = preg_split("/\r\n|\n/", $this->raw);
-        foreach ($items as $item)
-        {
+        foreach ($items as $item) {
             if (trim($item) == null || strpos($item, "=") === false) {
                 continue;
             }

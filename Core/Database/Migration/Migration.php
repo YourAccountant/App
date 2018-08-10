@@ -30,8 +30,8 @@ class Migration
         }
     }
 
-    public static function sort($order) {
+    public static function sort($order)
+    {
         self::$tables = array_merge(array_flip($order), self::$tables);
     }
-
 }

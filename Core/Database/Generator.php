@@ -153,5 +153,4 @@ class Generator
 
         return $sql;
     }
-
 }
