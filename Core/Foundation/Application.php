@@ -7,6 +7,7 @@ use \Core\Cache\Cache;
 use \Core\Container\Container;
 use \Core\Router\Router;
 use \Core\Debug\Debug;
+use \Core\Debug\Logger;
 use \Core\Database\Connection;
 use \Core\Database\Migration\Migration;
 use \Core\Template\View;
@@ -50,9 +51,9 @@ class Application
 
     public function initialize()
     {
+        $this->setDebug("log");
         $this->setConfig(".config");
         $this->setApp("App");
-        $this->setDebug("log");
         $this->setCache(".cache");
         $this->setConnection();
         $this->setMisc();
@@ -73,6 +74,7 @@ class Application
 
     public function setDebug($path)
     {
+        // Logger::init();
         $instance = new Debug($path);
         $this->services->add('Debugger', $instance);
         return $this;
