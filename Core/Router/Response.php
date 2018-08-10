@@ -2,6 +2,8 @@
 
 namespace Core\Router;
 
+use \Core\Template\View;
+
 class Response
 {
     public $code = 200;
@@ -15,6 +17,15 @@ class Response
     public $params = [];
 
     public $hasResponse = false;
+
+    public function view($view, $layout = null, $data = [])
+    {
+        $this->code = 200;
+        $this->addHeader('Content-type', 'text/html');
+        View::setData($data);
+        $layout = $layout ?? $this->layout ?? null;
+        $this->send(View::serve($view, $layout, true));
+    }
 
     public function send($content)
     {

@@ -26,6 +26,8 @@ class Dispatcher implements DispatcherContract
 
     public $response;
 
+    public $found = false;
+
     public function __construct($routes, $controllers = null, $policies = null, $on = null)
     {
         $this->routes = $routes;
@@ -42,13 +44,13 @@ class Dispatcher implements DispatcherContract
             if (!$route->match($this->request->path)) {
                 continue;
             }
-
+            $this->found = true;
             $this->execRoute($route);
             $this->response->run();
             break;
         }
 
-        if (!$this->response->hasResponse()) {
+        if (!$this->found) {
             $this->response->code = 404;
         }
 

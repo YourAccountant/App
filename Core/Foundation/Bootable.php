@@ -2,6 +2,8 @@
 
 namespace Core\Foundation;
 
+use \Core\Template\View;
+
 class Bootable
 {
     protected function getServices()
@@ -22,5 +24,10 @@ class Bootable
     protected function getPolicies()
     {
         return Application::$instance->policies;
+    }
+
+    protected function getDependencies()
+    {
+        return Application::$instance->dependencies;
     }
 }

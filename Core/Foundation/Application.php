@@ -9,6 +9,7 @@ use \Core\Router\Router;
 use \Core\Debug\Debug;
 use \Core\Database\Connection;
 use \Core\Database\Migration\Migration;
+use \Core\Template\View;
 
 class Application
 {
@@ -16,19 +17,19 @@ class Application
 
     public static $instance;
 
-    protected $root;
+    public $root;
 
-    protected $dependencies;
+    public $dependencies;
 
-    protected $services;
+    public $services;
 
-    protected $controllers;
+    public $controllers;
 
-    protected $commands;
+    public $commands;
 
-    protected $policies;
+    public $policies;
 
-    protected $misc;
+    public $misc;
 
     public function __construct($root, $auto = true)
     {
@@ -93,6 +94,7 @@ class Application
 
     public function setMisc()
     {
+        View::setBase($this->root . '/views');
         Migration::setConnection($this->dependencies->get('Connection'));
         Router::setControllers($this->controllers);
         Router::setPolicies($this->policies);

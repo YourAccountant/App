@@ -7,7 +7,7 @@ class HomeController extends \Core\Foundation\Controller
 
     public function show($req, $res)
     {
-        $res->send("<h1>Home</h1>");
+        $res->view("home.php", "layout.php", ['title' => $this->getDependencies()->get('Config')->name]);
     }
 
 }
