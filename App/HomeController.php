@@ -9,5 +9,4 @@ class HomeController extends \Core\Foundation\Controller
     {
         $res->view("home.php", "layout.php", ['title' => $this->getDependencies()->get('Config')->name]);
     }
-
 }

@@ -8,13 +8,6 @@
 </head>
 <body>
 <h1><?= isset($data->title) ? $data->title : "" ?></h1>
-    <?php
-    use \Core\Template\View;
-
-    if (View::$content != null)
-    {
-        echo View::$content;
-    }
-    ?>
+    <?php \Core\Template\View::getViewContent(); ?>
 </body>
 </html>

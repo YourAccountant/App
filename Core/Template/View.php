@@ -11,6 +11,8 @@ class View
 
     public static $data;
 
+    public static $view;
+
     public static function setBase($path)
     {
         self::$base = rtrim(trim($path), '/');
@@ -29,22 +31,38 @@ class View
     {
         $data = self::$data;
         \ob_start();
-        include self::$base . '/' . trim($path, '/');
+        self::include($path);
         $content = \ob_get_contents();
         \ob_end_clean();
         return $content;
     }
 
+    public static function getViewContent()
+    {
+        if (View::$view != null)
+        {
+            include View::$view;
+        }
+    }
+
+    public static function include($path, $get = false)
+    {
+        $path = self::$base . '/' . trim($path, '/');
+
+        if (!$get) {
+            include $path;
+        }
+
+        return $path;
+    }
+
     public static function serve($view, $layout = null, $return = false)
     {
-        $content = "";
-        $viewContent = self::get($view);
-
         if ($layout != null) {
-            self::$content = $viewContent;
+            self::$view = self::include($view, true);
             $content = self::get($layout);
         } else {
-            $content = $viewContent;
+            $content = self::get($view);
         }
 
         if ($return) {

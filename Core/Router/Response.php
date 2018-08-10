@@ -27,7 +27,7 @@ class Response
         $this->send(View::serve($view, $layout, true));
     }
 
-    public function send($content)
+    public function send($content = null)
     {
         $this->hasResponse = true;
         if (is_array($content)) {
@@ -35,6 +35,7 @@ class Response
         } else {
             $this->content = $content;
         }
+
         return $this;
     }
 
