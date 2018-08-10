@@ -25,11 +25,7 @@ class Debug
 
     public static function add($type, $name, $params = [])
     {
-        $t = microtime(true);
-        $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
-        $d = new DateTime(date('Y-m-d H:i:s.'.$micro, $t));
-
-        self::$data[strtolower($type)][strtolower($name)][$d->format("Y-m-d H:i:s.u")] = $params;
+        self::$data[strtolower($type)][strtolower($name)][] = $params;
     }
 
     public static function get($type = null, $name = null)

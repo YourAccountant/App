@@ -12,8 +12,6 @@ class Response
 
     public $cookies = [];
 
-    public $body = '';
-
     public $params = [];
 
     public $hasResponse = false;
@@ -30,11 +28,7 @@ class Response
     public function send($content = null)
     {
         $this->hasResponse = true;
-        if (is_array($content)) {
-            $this->content = json_encode($content);
-        } else {
-            $this->content = $content;
-        }
+        $this->content = is_array($content) ? json_encode($content) : $content;
 
         return $this;
     }

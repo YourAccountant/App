@@ -5,6 +5,7 @@ namespace Core\Router;
 use \Core\Contract\Router\DispatcherContract;
 use \Core\Contract\Router\RouterContract;
 use \Core\Contract\Container\ContainerContract;
+use \Core\Debug\Debug;
 
 /*
 run
@@ -44,17 +45,20 @@ class Dispatcher implements DispatcherContract
             if (!$route->match($this->request->path)) {
                 continue;
             }
+
+            Debug::add('routing', 'route', \get_object_vars($route));
             $this->found = true;
             $this->execRoute($route);
-            $this->response->run();
             break;
         }
+
 
         if (!$this->found) {
             $this->response->code = 404;
         }
 
         $this->execAfter();
+        $this->response->run();
         $this->response->setBack($this->request->fullUrl);
     }
 

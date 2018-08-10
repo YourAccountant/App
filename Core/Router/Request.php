@@ -2,6 +2,8 @@
 
 namespace Core\Router;
 
+use \Core\Debug\Debug;
+
 class Request
 {
     public $fullUrl;
@@ -40,6 +42,13 @@ class Request
         $this->postParameters = $_POST;
         $this->host = $this->parsedUrl['host'];
         $this->params = [];
+
+        Debug::add('routing', 'request', [
+            'url' => $this->parsedUrl,
+            'headers' => $this->headers,
+            'method' => $this->method,
+            'requestBody' => file_get_contents('php://input')
+        ]);
     }
 
     public static function getFullUrl()
