@@ -1,12 +1,17 @@
 <?php
 
 use \Core\Router\Router;
-use \Core\Database\Migration\Migration;
-use \Core\Database\QueryBuilder;
-use \Core\Database\Generator;
 
-Router::get('home', "HomeController.show");
-Router::get('home2', 'HomeController.x');
+
+Router::get('/dashboard', function ($req, $res) {
+    $res->send("<h1>Dashboard</h1>");
+
+})->addMiddleware("AccountPolicies.isLoggedIn");
+
+Router::get("/login", function ($req, $res) {
+    $res->send("<h1>login</h1>");
+});
+
 Router::on(404, function ($req, $res) {
-    echo "<h1>404</h1>";
+    $res->send("<h1>404</h1>");
 });

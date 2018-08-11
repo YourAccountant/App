@@ -52,32 +52,43 @@ class Application
 
     public function initialize()
     {
-        $this->setDebug("log");
-        $this->setConfig(".config");
-        $this->setApp("App");
+        $this->setPaths();
+        $this->setDebug();
+        $this->setConfig();
+        $this->setApp();
         $this->setCdnProvider();
-        $this->setCache(".cache");
+        $this->setCache();
         $this->setConnection();
         $this->setMisc();
         return $this;
     }
 
-    public function setCache($path)
+    public function setPaths()
     {
-        $this->services->add('Cache', new \Core\Cache\Cache($this->root . '/' . trim($path, '/')));
+        $this->paths = json_decode(file_get_contents($this->root . '/' . 'config.json'))->paths;
         return $this;
     }
 
-    public function setConfig($path)
+    public function getPath($name)
     {
-        $this->dependencies->add('Config', new \Core\Config\Config($this->root . '/' . trim($path, '/')));
+        return $this->root . '/' . trim($this->paths->{$name}, '/');
+    }
+
+    public function setCache()
+    {
+        $this->services->add('Cache', new \Core\Cache\Cache($this->getPath('cache')));
         return $this;
     }
 
-    public function setDebug($path)
+    public function setConfig()
     {
-        // Logger::init();
-        $instance = new Debug($path);
+        $this->dependencies->add('Config', new \Core\Config\Config($this->getPath('config') ?? ".config"));
+        return $this;
+    }
+
+    public function setDebug()
+    {
+        $instance = new Debug($this->getPath('log'));
         $this->services->add('Debugger', $instance);
         return $this;
     }
@@ -97,9 +108,9 @@ class Application
         return $this;
     }
 
-    public function setApp($path)
+    public function setApp()
     {
-        $this->scanApp($this->root . '/' . trim($path, '/'));
+        $this->scanApp($this->getPath('app'));
         return $this;
     }
 

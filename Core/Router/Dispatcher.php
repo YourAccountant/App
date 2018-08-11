@@ -40,6 +40,7 @@ class Dispatcher implements DispatcherContract
 
     public function run()
     {
+        Response::addHistory();
         $this->response = new Response();
         foreach ($this->routes[$this->request->method] as $route) {
             if (!$route->match($this->request->path)) {

@@ -1,0 +1,9 @@
+{
+    "paths": {
+        "config": ".config",
+        "log": "log",
+        "app": "App",
+        "cache": ".cache",
+        "cdn": "public/cdn"
+    }
+}

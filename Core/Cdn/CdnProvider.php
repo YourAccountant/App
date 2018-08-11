@@ -15,15 +15,11 @@ class CdnProvider extends \Core\Foundation\Service
 
     public function boot()
     {
-        $path = $this->getDependencies()->get('Config')->cdn;
+        $this->path = $this->getApp()->getPath('cdn') ?? $this->getRoot() . '/' . 'public/cdn';
+
         $this->cryption = function ($name) {
             return $name;
         };
-
-        if ($this->url == null) {
-            $this->url = Request::getHost() . '/' . trim($path, '/');
-            $this->path = $this->getRoot() . '/' . trim($path, '/');
-        }
 
         if (!file_exists($this->path)) {
             mkdir($this->path, 0777, true);

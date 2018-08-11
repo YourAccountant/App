@@ -25,8 +25,9 @@ class Response
         $this->send(View::serve($view, $layout, true));
     }
 
-    public function send($content = null)
+    public function send($content = null, $code = 200)
     {
+        $this->code = $code;
         $this->hasResponse = true;
         $this->content = is_array($content) ? json_encode($content) : $content;
 
@@ -89,5 +90,10 @@ class Response
     public static function setBack()
     {
         $_SESSION['app']['back'] = Request::getFullUrl();
+    }
+
+    public static function addHistory()
+    {
+        $_SESSION['app']['history'][] = Request::getFullUrl();
     }
 }
