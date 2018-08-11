@@ -9,30 +9,65 @@ class CdnProvider extends \Core\Foundation\Service
 
     public $url;
 
+    public $cryption;
+
+    public $files = [];
+
     public function boot()
     {
         $path = $this->getDependencies()->get('Config')->cdn;
+        $this->cryption = function ($name) {
+            return $name;
+        };
 
         if ($this->url == null) {
             $this->url = Request::getHost() . '/' . trim($path, '/');
             $this->path = $this->getRoot() . '/' . trim($path, '/');
         }
 
+        if (!file_exists($this->path)) {
+            mkdir($this->path, 0777, true);
+        }
+
         return $this;
     }
 
-    public function add($name, $item)
+    public function getFullPath($name)
     {
-        file_put_contents($this->path . '/' . trim($name, '/'), $item);
+        return $this->path . '/' . trim($name, '/');
+    }
+
+    public function add($name, $content)
+    {
+        $file = new File($this->getFullPath($name));
+        $this->files[$name] = $file;
+        $file->add($content);
+        return $file;
     }
 
     public function remove($name)
     {
-        unlink($this->path . '/' . trim($name, '/'));
+        File::unlink($name);
+        return $name;
     }
 
     public function get($name)
     {
+        $last = explode('/', $name);
+        $last = end($last);
+
         return \file_get_contents($this->path . '/' . trim($name, '/'));
+    }
+
+    public function hash($name)
+    {
+        $method = $this->cryption;
+        return $method($name);
+    }
+
+    public function setCryption($callback)
+    {
+        $this->cryption = $callback;
+        return $this;
     }
 }
