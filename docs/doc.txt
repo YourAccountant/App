@@ -1,0 +1,12 @@
+Debit: out going
+Credit: in-comming
+
+debit:
+assets: resources owned by company
+draw: owner cash personal use
+expenses: costs of the company
+
+credit:
+liability: payed goods and services on credit
+equitiy: difference between assets and liability
+revenue: earned / received money

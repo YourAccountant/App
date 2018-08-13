@@ -9,6 +9,7 @@ Router::on(404, function (Request $req, Response $res) {
 });
 
 Router::setPrefix("/api/:version/");
+
 Router::get('user', function ($req, $res) {
     echo "user";
 });
