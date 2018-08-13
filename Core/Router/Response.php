@@ -89,11 +89,25 @@ class Response
 
     public static function setBack()
     {
-        $_SESSION['app']['back'] = Request::getFullUrl();
+        if (!empty($_SESSION['app']['history'])) {
+            if ($_SESSION['app']['back'] == $_SESSION['app']['history'][count($_SESSION['app']['history']) - 1]) {
+                return;
+            }
+
+            $_SESSION['app']['back'] = $_SESSION['app']['history'][count($_SESSION['app']['history']) - 1];
+        }
     }
 
     public static function addHistory()
     {
-        $_SESSION['app']['history'][] = Request::getFullUrl();
+        $url = Request::getFullUrl();
+
+        if (!empty($_SESSION['app']['history'])) {
+            if ($_SESSION['app']['history'][count($_SESSION['app']['history']) -1] == $url) {
+                return;
+            }
+        }
+
+        $_SESSION['app']['history'][] = $url;
     }
 }

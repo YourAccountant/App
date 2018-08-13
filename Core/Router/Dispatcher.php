@@ -59,6 +59,9 @@ class Dispatcher implements DispatcherContract
 
         $this->execAfter();
         $this->response->run();
+        echo '<pre>';
+        print_r([$_SESSION, Debug::get()]);
+        echo '</pre>';
         Response::setBack();
     }
 
