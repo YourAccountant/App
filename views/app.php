@@ -9,6 +9,8 @@
 </head>
 <body>
 
+    <div id="app"></div>
+
     <script src="/dist/bundle.dist.js"></script>
 </body>
 </html>
