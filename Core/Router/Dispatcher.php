@@ -31,6 +31,10 @@ class Dispatcher implements DispatcherContract
 
     public function __construct($routes, $controllers = null, $policies = null, $on = null)
     {
+        if (!isset($_SESSION['app']['back'])) {
+            $_SESSION['app']['back'] = '/';
+        }
+
         $this->routes = $routes;
         $this->controllers = $controllers;
         $this->policies = $policies;
@@ -40,6 +44,10 @@ class Dispatcher implements DispatcherContract
 
     public function run()
     {
+        if (strpos($this->request->path, 'favicon.ico') !== false) {
+            return;
+        }
+
         Response::addHistory();
         $this->response = new Response();
         foreach ($this->routes[$this->request->method] as $route) {

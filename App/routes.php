@@ -12,8 +12,7 @@ Router::get("/", function($req, $res) {
 
 Router::get('/dashboard', function ($req, $res) {
     $res->send("<h1>Dashboard</h1>");
-
-});//->addMiddleware("AccountPolicies.isLoggedIn");
+})->addMiddleware("AccountPolicies.isLoggedIn");
 
 Router::get("/login", function ($req, $res) {
     $res->send("<h1>login</h1>");
