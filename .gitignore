@@ -3,3 +3,5 @@ vendor
 .config
 tests/data/temp
 public/cdn
+node_modules
+public/dist
