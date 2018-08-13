@@ -50,15 +50,18 @@ class Dispatcher implements DispatcherContract
 
         Response::addHistory();
         $this->response = new Response();
-        foreach ($this->routes[$this->request->method] as $route) {
-            if (!$route->match($this->request->path)) {
-                continue;
-            }
+        if (isset($this->routes[$this->request->method]))
+        {
+            foreach ($this->routes[$this->request->method] as $route) {
+                if (!$route->match($this->request->path)) {
+                    continue;
+                }
 
-            Debug::add('routing', 'route', \get_object_vars($route));
-            $this->found = true;
-            $this->execRoute($route);
-            break;
+                Debug::add('routing', 'route', \get_object_vars($route));
+                $this->found = true;
+                $this->execRoute($route);
+                break;
+            }
         }
 
         if (!$this->found) {
@@ -67,9 +70,6 @@ class Dispatcher implements DispatcherContract
 
         $this->execAfter();
         $this->response->run();
-        echo '<pre>';
-        print_r([$_SESSION, Debug::get()]);
-        echo '</pre>';
         Response::setBack();
     }
 

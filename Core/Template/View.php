@@ -50,6 +50,7 @@ class View
         $path = self::$base . '/' . trim($path, '/');
 
         if (!$get) {
+            $data = self::$data;
             include $path;
         }
 
