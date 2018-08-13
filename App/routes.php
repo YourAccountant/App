@@ -1,24 +1,14 @@
 <?php
 
 use \Core\Router\Router;
+use \Core\Router\Request;
+use \Core\Router\Response;
 
-Router::on(404, function ($req, $res) {
-    $res->send("<h1>404</h1>");
+Router::on(404, function (Request $req, Response $res) {
+    $res->view("app.php");
 });
 
-Router::get("/", function($req, $res) {
-    $res->redirect('/dashboard');
+Router::setPrefix("/api/:version/");
+Router::get('user', function ($req, $res) {
+    echo "user";
 });
-
-Router::get('/dashboard', function ($req, $res) {
-    $res->send("<h1>Dashboard</h1>");
-})->addMiddleware("AccountPolicies.isLoggedIn");
-
-Router::get("/login", function ($req, $res) {
-    $res->send("<h1>login</h1>");
-});
-
-Router::get("/home", function ($req, $res) {
-    $res->send(" <h1>Home</h1> ");
-});
-

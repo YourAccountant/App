@@ -51,7 +51,7 @@ class Route implements RouteContract
                 $pattern .= "\/$value";
             } else {
                 $this->params[$key] = ltrim($value, ':');
-                $pattern .= "\/[0-9A-Zaz]";
+                $pattern .= "\/[0-9a-zA-Z]+";
             }
         }
         $this->pattern = $pattern != "" ? $pattern : "\/";
