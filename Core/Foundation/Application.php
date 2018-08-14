@@ -184,8 +184,15 @@ class Application
         }
     }
 
+    public function isConsole()
+    {
+        return php_sapi_name() == 'cli';
+    }
+
     public function run()
     {
-        Router::dispatch();
+        if (!$this->isConsole()) {
+            Router::dispatch();
+        }
     }
 }
