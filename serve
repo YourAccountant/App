@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 $port = $argv[1] ?? 8000;
