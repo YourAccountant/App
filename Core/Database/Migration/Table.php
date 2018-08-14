@@ -65,7 +65,11 @@ class Table
             $this->prepare();
         }
 
-        $sql = " CREATE TABLE {$this->table} ( \n";
+        if (empty($this->columns)) {
+            return;
+        }
+
+        $sql = " CREATE TABLE `{$this->table}` ( \n";
         foreach ($this->columns as $column) {
             $sql .= "\t" . trim($column->generate()) . ",\n";
         }

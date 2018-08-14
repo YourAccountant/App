@@ -55,6 +55,13 @@ class Column
         return $this;
     }
 
+    public function int($length = 11)
+    {
+        $this->type = 'INT';
+        $this->length = $length;
+        return $this;
+    }
+
     public function text()
     {
         $this->type = 'TEXT';
@@ -62,11 +69,13 @@ class Column
         return $this;
     }
 
-    public function id()
+    public function id($bPrimary = true)
     {
         $this->type = 'INT';
         $this->length = 11;
-        $this->primary = true;
+        if ($bPrimary) {
+            $this->primary = true;
+        }
         $this->nullable = false;
         $this->index = false;
         $this->unsigned = true;
@@ -150,6 +159,6 @@ class Column
         $primary = $this->primary ? "AUTO_INCREMENT" : "";
         $default = $this->default != null ? "DEFAULT {$this->default}" : "";
 
-        return " {$this->name} {$this->type}{$length} {$null} {$default} {$primary} ";
+        return " `{$this->name}` {$this->type}{$length} {$null} {$default} {$primary} ";
     }
 }

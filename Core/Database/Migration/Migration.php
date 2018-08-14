@@ -26,12 +26,18 @@ class Migration
     {
         foreach (self::$tables as $name => $table) {
             $sql = $table->create();
-            self::$connection->query($sql);
+            if ($sql !=  null) {
+                self::$connection->query($sql);
+            }
         }
     }
 
     public static function sort($order)
     {
         self::$tables = array_merge(array_flip($order), self::$tables);
+    }
+
+    public static function get() {
+        return self::$tables;
     }
 }

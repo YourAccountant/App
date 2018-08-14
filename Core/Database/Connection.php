@@ -92,9 +92,16 @@ class Connection
     public function query($sql, $prepares = [])
     {
         self::hook("query", $sql, $prepares);
-        $stmt = self::$connection->prepare($sql);
-        $stmt->execute($prepares);
-        return $stmt;
+        try {
+            $stmt = self::$connection->prepare($sql);
+            $stmt->execute($prepares);
+            return $stmt;
+        } catch (\Exception $e) {
+            print_r([$e->getMessage(),$sql, $prepares]);
+        } catch (\Error $e) {
+            print_r([$e->getMessage(), $sql, $prepares]);
+        }
+        die;
     }
 
     public function get()

@@ -12,4 +12,6 @@ Router::setPrefix("/api/:version/");
 
 Router::get('user', function ($req, $res) {
     echo "user";
+    print_r(\Core\Database\Migration\Migration::get());
+
 });
