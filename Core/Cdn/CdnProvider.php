@@ -3,6 +3,7 @@
 namespace Core\Cdn;
 
 use \Core\Router\Request;
+use \Core\FileSystem\File;
 
 class CdnProvider extends \Core\Foundation\Service
 {
