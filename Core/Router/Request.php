@@ -63,4 +63,9 @@ class Request
     {
         return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest');
     }
+
+    public function pathIncludes($path)
+    {
+        return strpos($this->path, $path) !== false;
+    }
 }
