@@ -15,9 +15,13 @@ Router::on(404, function (Request $req, Response $res) {
     }
 });
 
+// Auth
+Router::setPrefix("/api/:version/auth");
+Router::get("/loggedin", "AuthController.checkLoggedIn");
+
 // api
 Router::setPrefix("/api/:version/");
 
-Router::get("/user", function () {
-    echo "user";
+Router::get("/", function ($req, $res) {
+    $res->send("Welcome to the API");
 });
