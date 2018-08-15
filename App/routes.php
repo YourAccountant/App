@@ -6,7 +6,7 @@ use \Core\Router\Response;
 
 // app view
 Router::on(404, function (Request $req, Response $res) {
-    if ($req->pathIncludes("api")) {
+    if ($req->pathIncludes("/api/")) {
         $res->send([
             "error" => "404"
         ], 404);
