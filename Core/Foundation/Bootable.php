@@ -49,4 +49,13 @@ class Bootable
     {
         return Application::$instance->dependencies;
     }
+
+    protected function getModels($name = null)
+    {
+        if ($name != null) {
+            return Application::$instance->models->get($name);
+        }
+
+        return Application::$instance->models;
+    }
 }

@@ -5,6 +5,7 @@ namespace Core\Foundation;
 use \Core\Config\Config;
 use \Core\Cache\Cache;
 use \Core\Container\Container;
+use \Core\Container\SimpleContainer;
 use \Core\Router\Router;
 use \Core\Debug\Debug;
 use \Core\Debug\Logger;
@@ -31,6 +32,8 @@ class Application
 
     public $policies;
 
+    public $models;
+
     public $misc;
 
     public function __construct($root, $auto = true)
@@ -43,6 +46,7 @@ class Application
         $this->controllers = new Container();
         $this->policies = new Container();
         $this->commands = new Container();
+        $this->models = new SimpleContainer();
         $this->misc = new Container();
 
         if ($auto) {
@@ -138,6 +142,10 @@ class Application
             $this->controllers->add($name, $namespace);
         } elseif (is_subclass_of($namespace, Command::class)) {
             $this->commands->add($name, $namespace);
+        } elseif (is_subclass_of($namespace, Model::class)) {
+            if (!$this->models->has($name)) {
+                $this->models->add($name, new SimpleContainer());
+            }
         } else {
             return false;
         }
@@ -191,6 +199,10 @@ class Application
 
     public function run()
     {
+        echo '<pre>';
+        print_r($this);
+        echo '</pre>';
+        die;
         if (!$this->isConsole()) {
             Router::dispatch();
         }
