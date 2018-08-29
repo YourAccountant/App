@@ -57,6 +57,15 @@ class AuthController extends Controller
         return $res->send(['result' => true], 201);
     }
 
+    public function signout(Request $req, Response $res)
+    {
+        if (!$this->getService('AuthService.signout')) {
+            return $res->send(['result' => false], 400);
+        }
+
+        return $res->send(['result' => true]);
+    }
+
     public function emailExists(Request $req, Response $res)
     {
         $exists = $this->getService('AuthService.checkEmailExists', $req->json()->email);

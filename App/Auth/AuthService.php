@@ -33,6 +33,13 @@ class AuthService extends Service
 
         $_SESSION['auth']['isLoggedIn'] = true;
         $_SESSION['auth']['client'] = $client->id;
+        $_SESSION['auth']['date'] = date('Y-m-d H:i:s');
+        return true;
+    }
+
+    public function signout()
+    {
+        unset($_SESSION['auth']);
         return true;
     }
 
