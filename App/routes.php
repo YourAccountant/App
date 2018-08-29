@@ -21,9 +21,9 @@ Router::post("/email-exists", "AuthController.emailExists");
 Router::setMiddleware(["ApiResponse.validJson", /*"ApiResponse.isAjax"*/]);
 Router::post("/signin", "AuthController.signin");
 Router::post("/signup", "AuthController.signup");
-Router::get("/signout", "AuthController.signout");
 
 Router::setMiddleware([]);
+Router::get("/signout", "AuthController.signout");
 
 // app view
 Router::on(404, function (Request $req, Response $res) {
