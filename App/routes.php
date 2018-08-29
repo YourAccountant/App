@@ -13,11 +13,14 @@ Router::get("/", function ($req, $res) {
 
 // Auth
 Router::setPrefix("/api/:version/auth");
-
-Router::setMiddleware(['ApiResponse.validJson']);
+Router::setMiddleware(["ApiResponse.validJson"]);
 
 Router::post("/loggedin", "AuthController.checkLoggedIn");
-Router::post('/email-exists', "AuthController.emailExists");
+Router::post("/email-exists", "AuthController.emailExists");
+
+Router::setMiddleware(["ApiResponse.validJson", /*"ApiResponse.isAjax"*/]);
+Router::post("/signin", "AuthController.signin");
+Router::post("/signup", "AuthController.signup");
 
 Router::setMiddleware([]);
 

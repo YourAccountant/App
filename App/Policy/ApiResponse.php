@@ -13,12 +13,20 @@ class ApiResponse extends Policy
     {
         $req->json();
 
-        if (json_last_error() == JSON_ERROR_NONE)
-        {
+        if (json_last_error() == JSON_ERROR_NONE) {
             return;
         }
 
-        $res->send(['error' => 'invalid json']);
+        return $res->send(['error' => 'invalid json'], 400);
+    }
+
+    public function isAjax(Request $req, Response $res)
+    {
+        if (Request::isAjax()) {
+            return;
+        }
+
+        return $res->send(['error' => 'unknown server'], 401);
     }
 
 }

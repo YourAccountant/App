@@ -3,6 +3,7 @@
 namespace App\Auth;
 
 use \Core\Foundation\Service;
+use \App\Client\Client;
 
 class AuthService extends Service
 {
@@ -13,6 +14,26 @@ class AuthService extends Service
         }
 
         return $_SESSION['auth']['isLoggedIn'] ? true : false;
+    }
+
+    public function signin($email, $password)
+    {
+        $client = $this->getDependencies()
+            ->get('Connection')
+            ->builder('clients')
+            ->columns("`id`, `password`")
+            ->where('email', '=', $email)
+            ->limit(1)
+            ->exec()
+            ->fetch();
+
+        if (!$this->verifyHash($client->password, $password)) {
+            return false;
+        }
+
+        $_SESSION['auth']['isLoggedIn'] = true;
+        $_SESSION['auth']['client'] = $client->id;
+        return true;
     }
 
     public function checkEmailExists($email)
@@ -29,9 +50,13 @@ class AuthService extends Service
         return ($count->emails > 0);
     }
 
-    public function checkPasswordValid($password)
+    public function signup(Client $client)
     {
-        # code...
+        $this->getDependencies()
+            ->get('Connection')
+            ->builder('clients')
+            ->insert(['email' => $client->email, 'password' => $this->hashPassword($client->password)])
+            ->exec();
     }
 
     public function hashPassword($password)
@@ -39,8 +64,8 @@ class AuthService extends Service
         return password_hash($password, PASSWORD_DEFAULT);
     }
 
-    public function validateHash($clientId, $password)
+    public function verifyHash($hash, $password)
     {
-        return \password_verify("", $password);
+        return \password_verify($password, $hash);
     }
 }
