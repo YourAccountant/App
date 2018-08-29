@@ -21,10 +21,10 @@ class Bootable
         return Application::$instance->services;
     }
 
-    protected function getService($key)
+    protected function getService($key, ...$params)
     {
         if (strpos($key, '.') !== false) {
-            return $this->getServices()->run($key);
+            return $this->getServices()->run($key, $params);
         }
 
         return $this->getServices()->get($key);

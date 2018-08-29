@@ -49,6 +49,11 @@ class Request
         Debug::add('routing', 'request', get_object_vars($this));
     }
 
+    public function json()
+    {
+        return json_decode($this->body);
+    }
+
     public static function getFullUrl()
     {
         return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";

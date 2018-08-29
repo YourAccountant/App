@@ -18,6 +18,13 @@ class Model extends Bootable
 
     protected $table;
 
+    public function __construct($id = null)
+    {
+        if ($id != null) {
+            $this->getBy("id", "=", $id);
+        }
+    }
+
     public function getBy($column, $operator, $value)
     {
         $this->builder = Connection::builder($this->getTableName());

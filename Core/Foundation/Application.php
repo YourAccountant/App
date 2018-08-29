@@ -199,10 +199,6 @@ class Application
 
     public function run()
     {
-        echo '<pre>';
-        print_r($this);
-        echo '</pre>';
-        die;
         if (!$this->isConsole()) {
             Router::dispatch();
         }
