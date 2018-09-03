@@ -4,6 +4,10 @@ use \Core\Router\Router;
 use \Core\Router\Request;
 use \Core\Router\Response;
 
+// static pages
+Router::setPrefix("/");
+Router::setMiddleware([]);
+
 // api
 Router::setPrefix("/api/:version/");
 
@@ -12,7 +16,9 @@ Router::get("/", function ($req, $res) {
 });
 
 Router::setPrefix("/api/:version/oauth");
-Router::get(":partner/grant", "OAuthController.grant");
+Router::get(":partner/grant", "OAuthController.grant")
+    ->setMiddleware(["AuthPolicy.hasToBeLoggedIn"]);
+
 Router::post("authorize", "OAuthController.authorize");
 Router::put("refresh", "OAuthController.refresh");
 
@@ -29,8 +35,6 @@ Router::post("/signup", "AuthController.signup");
 
 Router::setMiddleware([]);
 Router::get("/signout", "AuthController.signout");
-
-
 
 Router::setPrefix("/api/:version/client");
 Router::get(":clientId", "ClientController.getClient");

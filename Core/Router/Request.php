@@ -38,7 +38,6 @@ class Request
         $this->path = $this->parsedUrl['path'] ?? "/";
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->body = file_get_contents('php://input');
-        $this->headers = getallheaders();
         $this->requestTime = $_SERVER['REQUEST_TIME'];
         $this->queryParameters = $_GET;
         $this->postParameters = $_POST;
@@ -46,7 +45,20 @@ class Request
         $this->params = [];
         $this->back = $_SESSION['app']['back'] ?? null;
 
+        $this->headers = new \stdClass();
+        foreach (getallheaders() as $key => $value) {
+            $key = strtolower($key);
+            $this->headers->$key = $value;
+        }
+
         Debug::add('routing', 'request', get_object_vars($this));
+    }
+
+    public function set($field, $data)
+    {
+        if (!isset($this->$field)) {
+            $this->$field = $data;
+        }
     }
 
     public function json()

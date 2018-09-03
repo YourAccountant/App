@@ -45,17 +45,14 @@ class Bootable
         return Application::$instance->policies;
     }
 
-    protected function getDependencies()
+    protected function getDependencies($name = null)
     {
-        return Application::$instance->dependencies;
-    }
+        $dependencies = Application::$instance->dependencies;
 
-    protected function getModels($name = null)
-    {
         if ($name != null) {
-            return Application::$instance->models->get($name);
+            return $dependencies->get($name);
         }
 
-        return Application::$instance->models;
+        return $dependencies;
     }
 }

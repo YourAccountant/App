@@ -66,6 +66,13 @@ class AuthService extends Service
             ->exec();
     }
 
+    public function getSignedInClientId()
+    {
+        if ($this->isLoggedIn()) {
+            return $_SESSION['auth']['client'];
+        }
+    }
+
     public function hashPassword($password)
     {
         return password_hash($password, PASSWORD_DEFAULT);

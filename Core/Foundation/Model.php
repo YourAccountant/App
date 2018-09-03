@@ -12,11 +12,25 @@ class Model extends Bootable
      * Fetched database object
      * @var object
      */
-    private $pool;
+    protected $pool;
 
     protected $table;
 
-    public function create($data)
+    public function poolIsEmpty()
+    {
+        return empty($this->pool) ? true : false;
+    }
+
+    public function get($property)
+    {
+        if (isset($pool->$property)) {
+            return $pool->$property;
+        }
+
+        return null;
+    }
+
+    public function insert($data)
     {
         return $this->getDependencies('Connection')
                 ->builder($this->getTableName())

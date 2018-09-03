@@ -20,13 +20,14 @@ class Str
 
     public static function getRandomString($length = 24, $chars = 'qwertyuiopasdfghjklzxcvbnm1234567890')
     {
-        $chars = is_array($chars) ? $chars : str_split($chars);
+        return bin2hex(random_bytes(64));
+        // $chars = is_array($chars) ? $chars : str_split($chars);
 
-        $str = "";
-        for ($i = 0; $i < $length; $i++) {
-            $str .= $chars[rand(0, count($chars) - 1)];
-        }
+        // $str = "";
+        // for ($i = 0; $i < $length; $i++) {
+        //     $str .= $chars[rand(0, count($chars) - 1)];
+        // }
 
-        return $str;
+        // return $str;
     }
 }

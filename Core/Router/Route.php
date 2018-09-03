@@ -27,7 +27,7 @@ class Route implements RouteContract
         $this->setPattern();
     }
 
-    public function addMiddleware($middleware = [])
+    public function setMiddleware($middleware = [])
     {
         if (is_array($middleware)) {
             $this->middleware = array_merge($this->middleware, $middleware);

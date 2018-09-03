@@ -15,6 +15,6 @@ class AuthPolicy extends Policy
             return;
         }
 
-        return $res->send(['result' => false], 403);
+        return $res->redirect(Request::getHost() . "/login?prev=" . urlencode(Request::getFullUrl()));
     }
 }
