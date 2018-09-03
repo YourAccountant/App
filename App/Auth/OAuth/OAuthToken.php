@@ -4,8 +4,6 @@ namespace App\Auth\OAuth;
 
 use \Core\Foundation\Model;
 
-class OAuthClient extends Model
+class OAuthToken extends Model
 {
-    public $id;
 }
-

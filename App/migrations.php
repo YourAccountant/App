@@ -22,6 +22,7 @@ $clients->add('updated_at')->dateUpdate();
 // subscriptions
 $subscriptions = Migration::table('subscriptions');
 $subscriptions->add('id')->id();
+
 // payments
 $payments = Migration::table('payments');
 $payments->add('id')->id();
@@ -29,6 +30,15 @@ $payments->add('id')->id();
 // oauth clients
 $oauthClients = Migration::table('oauth_clients');
 $oauthClients->add('id')->id();
+
+$oauthTokens = Migration::table('oath_tokens');
+$oauthTokens->add('id')->id();
+$oauthTokens->add('client_id')->id(false)->relation('clients', 'id');
+$oauthTokens->add('oauth_client_id')->id(false)->relation('oauth_clients', 'id');
+$oauthTokens->add('token_type')->string(255);
+$oauthTokens->add('token')->string(255)->unique();
+$oauthTokens->add('created_at')->dateCreate();
+$oauthTokens->add('updated_at')->dateUpdate();
 
 // administrations
 $administrations = Migration::table('administrations');
