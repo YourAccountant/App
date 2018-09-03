@@ -33,7 +33,7 @@ $oauthPartner->add('id')->id();
 $oauthPartner->add('slug')->string(255)->unique();
 $oauthPartner->add('name')->string(255);
 $oauthPartner->add('desc')->text();
-$oauthPartner->add('redirectUrl')->string(255);
+$oauthPartner->add('redirect_url')->string(255);
 
 $oauthTokens = Migration::table('oath_tokens');
 $oauthTokens->add('id')->id();
