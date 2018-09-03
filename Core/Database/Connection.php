@@ -15,6 +15,8 @@ class Connection
 
     private static $hooks = [];
 
+    private static $lastInsertId;
+
     public static function boot(Config $config)
     {
         self::$config = $config;
@@ -92,16 +94,33 @@ class Connection
     public function query($sql, $prepares = [])
     {
         self::hook("query", $sql, $prepares);
+        $stmt = self::$connection->prepare($sql);
         try {
-            $stmt = self::$connection->prepare($sql);
+            if (method_exists($stmt, 'beginTransaction')) {
+                $stmt->beginTransaction();
+            }
+
             $stmt->execute($prepares);
+
+            if (method_exists($stmt, 'commit')) {
+                $stmt->commit();
+            }
+
+            if (isset($stmt->lastInsertId)) {
+                self::$lastInsertId = $stmt->lastInsertId;
+                return self::$lastInsertId;
+            }
+
             return $stmt;
         } catch (\Exception $e) {
-            print_r([$e->getMessage(),$sql, $prepares]);
+            if (method_exists($stmt, 'rollback')) {
+                $stmt->rollback();
+            }
         } catch (\Error $e) {
-            print_r([$e->getMessage(), $sql, $prepares]);
+            if (method_exists($stmt, 'rollback')) {
+                $stmt->rollback();
+            }
         }
-        die;
     }
 
     public function get()
