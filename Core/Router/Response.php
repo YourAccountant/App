@@ -29,7 +29,7 @@ class Response
     {
         $this->code = $code;
         $this->hasResponse = true;
-        $this->content = is_array($content) ? json_encode($content) : $content;
+        $this->content = (string) is_array($content) ? json_encode($content) : $content;
 
         return $this;
     }

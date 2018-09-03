@@ -33,10 +33,20 @@ class Model extends Bootable
         $model = $query->fetch();
         $this->pool = $model;
         $this->setModelByPool();
+
+        if (empty($model)) {
+            return false;
+        }
+
+        return true;
     }
 
     public function setModelByPool()
     {
+        if (empty($this->pool)) {
+            return $this;
+        }
+
         foreach ($this->pool as $key => $value) {
             $this->{$key} = $value;
         }
@@ -50,5 +60,24 @@ class Model extends Bootable
         }
 
         return $this->table;
+    }
+
+    public function getWithoutIgnore()
+    {
+        $pool = $this->pool;
+        if (isset($this->ignore)) {
+            foreach ($this->ignore as $column) {
+                if (isset($pool->$column)) {
+                    unset($pool->$column);
+                }
+            }
+        }
+
+        return $pool;
+    }
+
+    public function __toString()
+    {
+        return json_encode($this->getWithoutIgnore());
     }
 }
