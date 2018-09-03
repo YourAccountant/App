@@ -25,6 +25,9 @@ Router::post("/signup", "AuthController.signup");
 Router::setMiddleware([]);
 Router::get("/signout", "AuthController.signout");
 
+Router::setPrefix("/api/:version/client");
+Router::get(":clientId", "ClientController.getClient");
+
 // app view
 Router::on(404, function (Request $req, Response $res) {
     if ($req->pathIncludes("/api/")) {
