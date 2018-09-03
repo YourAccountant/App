@@ -28,15 +28,19 @@ $payments = Migration::table('payments');
 $payments->add('id')->id();
 
 // oauth clients
-$oauthClients = Migration::table('oauth_clients');
-$oauthClients->add('id')->id();
+$oauthPartner = Migration::table('oauth_partners');
+$oauthPartner->add('id')->id();
+$oauthPartner->add('slug')->string(255)->unique();
+$oauthPartner->add('name')->string(255);
+$oauthPartner->add('desc')->text();
 
 $oauthTokens = Migration::table('oath_tokens');
 $oauthTokens->add('id')->id();
 $oauthTokens->add('client_id')->id(false)->relation('clients', 'id');
-$oauthTokens->add('oauth_client_id')->id(false)->relation('oauth_clients', 'id');
+$oauthTokens->add('oauth_partner_id')->id(false)->relation('oauth_partners', 'id');
 $oauthTokens->add('token_type')->string(255);
 $oauthTokens->add('token')->string(255)->unique();
+$oauthTokens->add('date_expiration')->timestamp();
 $oauthTokens->add('created_at')->dateCreate();
 $oauthTokens->add('updated_at')->dateUpdate();
 

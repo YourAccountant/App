@@ -11,6 +11,11 @@ Router::get("/", function ($req, $res) {
     $res->send("Welcome to the API");
 });
 
+Router::setPrefix("/api/:version/oauth");
+Router::get(":partner/grant", "OAuthController.grant");
+Router::post("authorize", "OAuthController.authorize");
+Router::put("refresh", "OAuthController.refresh");
+
 // Auth
 Router::setPrefix("/api/:version/auth");
 Router::setMiddleware(["ApiResponse.validJson"]);
@@ -24,6 +29,8 @@ Router::post("/signup", "AuthController.signup");
 
 Router::setMiddleware([]);
 Router::get("/signout", "AuthController.signout");
+
+
 
 Router::setPrefix("/api/:version/client");
 Router::get(":clientId", "ClientController.getClient");

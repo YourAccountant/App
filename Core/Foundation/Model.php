@@ -14,23 +14,41 @@ class Model extends Bootable
      */
     private $pool;
 
-    private $builder;
-
     protected $table;
 
-    public function __construct($id = null)
+    public function create($data)
     {
-        if ($id != null) {
-            $this->getBy("id", "=", $id);
-        }
+        return $this->getDependencies('Connection')
+                ->builder($this->getTableName())
+                ->insert($data)
+                ->exec();
+    }
+
+    public function update($id, $data)
+    {
+        return $this->getDependencies('Connection')
+                ->builder($this->getTableName())
+                ->where('id', '=', $id)
+                ->update($data);
+    }
+
+    public function delete($id)
+    {
+        return $this->getDependencies('Connection')
+                ->builder($this->getTableName())
+                ->where('id', '=', $id)
+                ->delete()
+                ->exec();
     }
 
     public function getBy($column, $operator, $value)
     {
-        $this->builder = Connection::builder($this->getTableName());
-        $this->builder->where($column, $operator, $value);
-        $query = $this->builder->exec();
-        $model = $query->fetch();
+        $model = $this->getDependencies('Connection')
+                    ->builder($this->getTableName())
+                    ->where($column, $operator, $value)
+                    ->exec()
+                    ->fetch();
+
         $this->pool = $model;
         $this->setModelByPool();
 
@@ -39,6 +57,19 @@ class Model extends Bootable
         }
 
         return true;
+    }
+
+    public function exists($column, $operator, $value)
+    {
+        $count = $this->getDependencies('Connection')
+                    ->builder($this->getTableName())
+                    ->columns("COUNT({$column}) as `total`")
+                    ->where($column, $operator, $value)
+                    ->limit(1)
+                    ->exec()
+                    ->fetch();
+
+        return $count['total'] > 0 ? true : false;
     }
 
     public function setModelByPool()
