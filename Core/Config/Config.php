@@ -9,11 +9,19 @@ class Config
 
     private $raw;
 
+    public $isDev = false;
+
     public function __construct($path)
     {
         $this->path = $path;
         $this->get();
         $this->serialize();
+        $this->isDev = (isset($this->env) && strtolower($this->env) == 'dev');
+    }
+
+    public function isDev()
+    {
+        return $this->isDev;
     }
 
     public function get()

@@ -16,8 +16,6 @@ class Connection
 
     private static $hooks = [];
 
-    private static $lastInsertId;
-
     public static function boot(Config $config)
     {
         self::$config = $config;
@@ -52,7 +50,11 @@ class Connection
             );
         } catch (\PDOException $e) {
             self::hook("connect", false);
-            die($e->getMessage());
+
+            if (self::$config->isDev()) {
+                die($e->getMessage());
+            }
+
             return false;
         }
 
@@ -113,13 +115,20 @@ class Connection
             if (method_exists($stmt, 'rollback')) {
                 $stmt->rollback();
             }
-            Debug::print();
+
+            if (self::$config->isDev()) {
+                Debug::print();
+                die;
+            }
         } catch (\Error $e) {
             if (method_exists($stmt, 'rollback')) {
                 $stmt->rollback();
             }
-            Debug::print();
-            die;
+
+            if (self::$config->isDev()) {
+                Debug::print();
+                die;
+            }
         }
     }
 
