@@ -13,18 +13,23 @@ class OAuthService extends Service
 
     public function sendGrant($url, OAuthToken $token)
     {
-        $response = $this->guzzle->post($url, [
-            'headers' => [
-                'Content-type' => 'application/json'
-            ],
-            'json' => [
-                'type' => 'refresh_token',
-                'refresh_token' => $token->get('token'),
-                'expiry_date' => $token->get('date_expiration')
-            ]
-        ]);
+        try {
+            $response = $this->guzzle->post($url, [
+                'headers' => [
+                    'Content-type' => 'application/json'
+                ],
+                'json' => [
+                    'type' => 'refresh_token',
+                    'refresh_token' => $token->get('token'),
+                    'expiry_date' => $token->get('date_expiration'),
+                    'reference' => $_GET['reference'] ?? null
+                ]
+            ]);
 
-        if ($response->getStatusCode() > 300) {
+            if ($response->getStatusCode() > 300) {
+                return false;
+            }
+        } catch (\Exception $e) {
             return false;
         }
 

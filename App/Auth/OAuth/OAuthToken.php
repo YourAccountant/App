@@ -55,8 +55,33 @@ class OAuthToken extends Model
         return date('Y-m-d H:i:s', strtotime("+{$this->daysAfterExpiry} days"));
     }
 
+    public function getByRelation($type, $partnerId, $clientId)
+    {
+        return $this->getDependencies('Connection')
+                    ->builder($this->table)
+                    ->where('oauth_partner_id', '=', $partnerId)
+                    ->and('client_id', '=', $clientId)
+                    ->and('token_type', '=', $type)
+                    ->limit(1)
+                    ->exec()
+                    ->fetch();
+    }
+
     public function create($type, $partnerId, $clientId)
     {
+        if ($type == 'refreshToken') {
+            $token = $this->getByRelation('refreshToken', $partnerId, $clientId);
+
+            if (!empty($token)) {
+                $this->update($token->id, [
+                    'token' => $this->generateToken(),
+                    'date_expiration' => $this->getExpiryDate()
+                ]);
+
+                return $token->id;
+            }
+        }
+
         return $this->insert([
             'oauth_partner_id' => $partnerId,
             'client_id' => $clientId,
