@@ -40,10 +40,13 @@ class Model extends Bootable
 
     public function update($id, $data)
     {
-        return $this->getDependencies('Connection')
+        $this->getDependencies('Connection')
                 ->builder($this->getTableName())
                 ->where('id', '=', $id)
-                ->update($data);
+                ->update($data)
+                ->exec();
+
+        return $id;
     }
 
     public function delete($id)
