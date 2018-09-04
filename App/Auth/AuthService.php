@@ -18,8 +18,7 @@ class AuthService extends Service
 
     public function signin($email, $password)
     {
-        $client = $this->getDependencies()
-            ->get('Connection')
+        $client = $this->getDependencies('Connection')
             ->builder('clients')
             ->columns("`id`, `password`")
             ->where('email', '=', $email)

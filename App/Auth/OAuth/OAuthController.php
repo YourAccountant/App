@@ -17,16 +17,21 @@ class OAuthController extends Controller
 
     public function grant(Request $req, Response $res)
     {
+        if(!$this->getService('AuthService.signin', "k@h.nl", "123")) {
+            $this->printLog();
+        }
+
         $slug = $req->params['partner'];
         $partner = new OAuthPartner();
+
         if (!$partner->getBy('slug', '=', $slug)) {
             // partner not found
-            die;
         }
 
         $token = new OAuthToken();
         $tokenId = $token->create('refreshToken', $partner->get('id'), $this->getService('AuthService.getSignedInClientId'));
         $token->getBy('id', '=', $tokenId);
+
         if (!$this->getService('OAuthService.sendGrant', $partner->get('redirect_url'), $token)) {
             // failed to create grant
             die;

@@ -15,7 +15,7 @@ class OAuthToken extends Model
 
     public function generateToken()
     {
-        $token = Str::generateRandomString($this->tokenLength);
+        $token = bin2hex(random_bytes(64));
 
         if ($this->exists('token', '=', $token)) {
             return $this->generateToken();

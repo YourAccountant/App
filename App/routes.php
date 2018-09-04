@@ -16,8 +16,8 @@ Router::get("/", function ($req, $res) {
 });
 
 Router::setPrefix("/api/:version/oauth");
-Router::get(":partner/grant", "OAuthController.grant")
-    ->setMiddleware(["AuthPolicy.hasToBeLoggedIn"]);
+Router::get("/:partner/grant", "OAuthController.grant");
+    // ->setMiddleware(["AuthPolicy.hasToBeLoggedIn"]);
 
 Router::post("authorize", "OAuthController.authorize");
 Router::put("refresh", "OAuthController.refresh");
