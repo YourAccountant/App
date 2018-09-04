@@ -59,6 +59,7 @@ class OAuthController extends Controller
         }
 
         $tokenId = $token->create('bearer', $token->get('oauth_partner_id'), $token->get('client_id'));
+
         $bearerToken = new OAuthToken();
         $bearerToken->getBy('id', '=', $tokenId);
         return $res->send(['action' => 'authorize', 'token' => $bearerToken->get('token'), 'expiry_date' => $bearerToken->get('date_expiration')]);
@@ -66,7 +67,7 @@ class OAuthController extends Controller
 
     public function refresh(Request $req, Response $res)
     {
-        $refreshToken = $req->queryParameters['refresh_token'] ?? null;
+        $refreshToken = $req->json()->refresh_token;
 
         if ($refreshToken == null) {
             return $res->send(['error' => 'Not authorized'], 402);

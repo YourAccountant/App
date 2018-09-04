@@ -22,8 +22,8 @@ Router::get("/:partner/grant", "OAuthController.grant");
 Router::post("authorize", "OAuthController.authorize")
     ->setMiddleware(['ApiResponse.validJson']);
 
-Router::post("refresh", "OAuthController.refresh");
-
+Router::post("refresh", "OAuthController.refresh")
+    ->setMiddleware(['ApiResponse.validJson']);
 // Auth
 Router::setPrefix("/api/:version/auth");
 Router::setMiddleware(["ApiResponse.validJson"]);

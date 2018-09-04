@@ -32,16 +32,17 @@ $oauthPartner = Migration::table('oauth_partners');
 $oauthPartner->add('id')->id();
 $oauthPartner->add('slug')->string(255)->unique();
 $oauthPartner->add('name')->string(255);
-$oauthPartner->add('desc')->text();
-$oauthPartner->add('redirect_url')->string(255);
+$oauthPartner->add('desc')->text()->nullable();
+$oauthPartner->add('redirect_url')->string(255)->nullable();
 
 $oauthTokens = Migration::table('oauth_tokens');
 $oauthTokens->add('id')->id();
-$oauthTokens->add('client_id')->id(false)->relation('clients', 'id');
-$oauthTokens->add('oauth_partner_id')->id(false)->relation('oauth_partners', 'id');
+$oauthTokens->add('client_id')->id(false)->relation('clients', 'id')->nullable();
+$oauthTokens->add('oauth_partner_id')->id(false)->relation('oauth_partners', 'id')->nullable();
+$oauthTokens->add('refresh_token_id')->id(false)->relation('oauth_tokens', 'id')->nullable();
 $oauthTokens->add('token_type')->string(255);
 $oauthTokens->add('token')->string(255)->unique();
-$oauthTokens->add('date_expiration')->timestamp();
+$oauthTokens->add('date_expiration')->timestamp()->nullable();
 $oauthTokens->add('created_at')->dateCreate();
 $oauthTokens->add('updated_at')->dateUpdate();
 
