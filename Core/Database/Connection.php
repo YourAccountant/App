@@ -4,6 +4,7 @@ namespace Core\Database;
 
 use \PDO;
 use \Core\Config\Config;
+use \Core\Debug\Debug;
 
 class Connection
 {
@@ -95,6 +96,7 @@ class Connection
     {
         self::hook("query", $sql, $prepares);
         $stmt = self::$connection->prepare($sql);
+
         try {
             if (method_exists($stmt, 'beginTransaction')) {
                 $stmt->beginTransaction();
@@ -106,20 +108,18 @@ class Connection
                 $stmt->commit();
             }
 
-            if (isset($stmt->lastInsertId)) {
-                self::$lastInsertId = $stmt->lastInsertId;
-                return self::$lastInsertId;
-            }
-
             return $stmt;
         } catch (\Exception $e) {
             if (method_exists($stmt, 'rollback')) {
                 $stmt->rollback();
             }
+            Debug::print();
         } catch (\Error $e) {
             if (method_exists($stmt, 'rollback')) {
                 $stmt->rollback();
             }
+            Debug::print();
+            die;
         }
     }
 

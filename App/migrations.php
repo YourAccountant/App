@@ -35,7 +35,7 @@ $oauthPartner->add('name')->string(255);
 $oauthPartner->add('desc')->text();
 $oauthPartner->add('redirect_url')->string(255);
 
-$oauthTokens = Migration::table('oath_tokens');
+$oauthTokens = Migration::table('oauth_tokens');
 $oauthTokens->add('id')->id();
 $oauthTokens->add('client_id')->id(false)->relation('clients', 'id');
 $oauthTokens->add('oauth_partner_id')->id(false)->relation('oauth_partners', 'id');

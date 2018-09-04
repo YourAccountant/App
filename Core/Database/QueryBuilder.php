@@ -182,6 +182,11 @@ class QueryBuilder
             $this->prepareWhere();
         }
 
-        return new Query($this->connection, $this);
+        $query = new Query($this->connection, $this);
+        if ($this->type == 'insert') {
+            return $this->connection->get()->lastInsertId();
+        }
+
+        return $query;
     }
 }

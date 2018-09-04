@@ -38,4 +38,11 @@ class Debug
             return self::$data[$type][$name];
         }
     }
+
+    public static function print($type = null, $name = null)
+    {
+        $d = self::get($type, $name);
+        print_r($d);
+        die;
+    }
 }

@@ -3,6 +3,7 @@
 namespace Core\Foundation;
 
 use \Core\Template\View;
+use \Core\Debug\Debug;
 
 class Bootable
 {
@@ -54,5 +55,10 @@ class Bootable
         }
 
         return $dependencies;
+    }
+
+    protected function printLog()
+    {
+        Debug::print();
     }
 }

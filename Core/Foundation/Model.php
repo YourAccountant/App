@@ -23,8 +23,8 @@ class Model extends Bootable
 
     public function get($property)
     {
-        if (isset($pool->$property)) {
-            return $pool->$property;
+        if (isset($this->pool->$property)) {
+            return $this->pool->$property;
         }
 
         return null;
@@ -83,7 +83,7 @@ class Model extends Bootable
                     ->exec()
                     ->fetch();
 
-        return $count['total'] > 0 ? true : false;
+        return $count->total > 0 ? true : false;
     }
 
     public function setModelByPool()
