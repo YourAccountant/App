@@ -19,8 +19,10 @@ Router::setPrefix("/api/:version/oauth");
 Router::get("/:partner/grant", "OAuthController.grant");
     // ->setMiddleware(["AuthPolicy.hasToBeLoggedIn"]);
 
-Router::post("authorize", "OAuthController.authorize");
-Router::put("refresh", "OAuthController.refresh");
+Router::post("authorize", "OAuthController.authorize")
+    ->setMiddleware(['ApiResponse.validJson']);
+
+Router::post("refresh", "OAuthController.refresh");
 
 // Auth
 Router::setPrefix("/api/:version/auth");

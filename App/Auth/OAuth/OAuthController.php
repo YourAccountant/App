@@ -25,16 +25,15 @@ class OAuthController extends Controller
         $partner = new OAuthPartner();
 
         if (!$partner->getBy('slug', '=', $slug)) {
-            // partner not found
+            return $res->send(" <h1>Partner is not in our system</h1> ");
         }
 
         $token = new OAuthToken();
-        $tokenId = $token->create('refreshToken', $partner->get('id'), $this->getService('AuthService.getSignedInClientId'));
+        $tokenId = $token->create('refresh_token', $partner->get('id'), $this->getService('AuthService.getSignedInClientId'));
         $token->getBy('id', '=', $tokenId);
 
         if (!$this->getService('OAuthService.sendGrant', $partner->get('redirect_url'), $token)) {
-            // failed to create grant
-            die;
+            return $res->send(" <h1>Failed to grant permission</h1> ");
         }
 
         if (isset($req->queryParameters['success'])) {
@@ -46,7 +45,7 @@ class OAuthController extends Controller
 
     public function authorize(Request $req, Response $res)
     {
-        $refreshToken = $req->queryParameters['refresh_token'] ?? null;
+        $refreshToken = $req->json()->refresh_token;
 
         if ($refreshToken == null) {
             return $res->send(['error' => 'Not authorized'], 402);
@@ -59,10 +58,10 @@ class OAuthController extends Controller
             return $res->send(['error' => 'token does not exist'], 400);
         }
 
-        $tokenId = $token->create('bearer', $token->get('partner_id'), $token->get('client_id'));
+        $tokenId = $token->create('bearer', $token->get('oauth_partner_id'), $token->get('client_id'));
         $bearerToken = new OAuthToken();
         $bearerToken->getBy('id', '=', $tokenId);
-        return $res->send(['bearer' => $bearerToken->get('token'), 'expiry_date' => $bearerToken->get('date_expiration')]);
+        return $res->send(['action' => 'authorize', 'token' => $bearerToken->get('token'), 'expiry_date' => $bearerToken->get('date_expiration')]);
     }
 
     public function refresh(Request $req, Response $res)
@@ -81,5 +80,6 @@ class OAuthController extends Controller
         }
 
         $token->refresh($token->get('id'));
+        return $res->send(['action' => 'refresh', 'token' => $token->get('token'), 'expiry_date' => $token->get('date_expiration')]);
     }
 }

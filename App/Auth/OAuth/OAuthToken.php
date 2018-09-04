@@ -69,8 +69,8 @@ class OAuthToken extends Model
 
     public function create($type, $partnerId, $clientId)
     {
-        if ($type == 'refreshToken') {
-            $token = $this->getByRelation('refreshToken', $partnerId, $clientId);
+        if ($type == 'refresh_token') {
+            $token = $this->getByRelation('refresh_token', $partnerId, $clientId);
 
             if (!empty($token)) {
                 $this->update($token->id, [
