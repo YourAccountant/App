@@ -6,6 +6,7 @@ use \Core\Contract\Router\DispatcherContract;
 use \Core\Contract\Router\RouterContract;
 use \Core\Contract\Container\ContainerContract;
 use \Core\Debug\Debug;
+use \Core\Foundation\Application;
 
 /*
 run
@@ -40,6 +41,8 @@ class Dispatcher implements DispatcherContract
         $this->policies = $policies;
         $this->on = $on;
         $this->request = new Request();
+
+        Application::getInstance()->addModel('request', $this->request);
     }
 
     public function run()

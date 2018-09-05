@@ -54,6 +54,11 @@ class Application
         }
     }
 
+    public static function getInstance()
+    {
+        return self::$instance;
+    }
+
     public function initialize()
     {
         $this->setPaths();
@@ -142,15 +147,22 @@ class Application
             $this->controllers->add($name, $namespace);
         } elseif (is_subclass_of($namespace, Command::class)) {
             $this->commands->add($name, $namespace);
-        } elseif (is_subclass_of($namespace, Model::class)) {
-            if (!$this->models->has($name)) {
-                $this->models->add($name, new SimpleContainer());
-            }
         } else {
             return false;
         }
 
         return true;
+    }
+
+    public function addModel($name, $model)
+    {
+        $this->models->add($name, $model);
+        return $this;
+    }
+
+    public function getModel($name)
+    {
+        return $this->models->get($name);
     }
 
     public function getNamespace($path)

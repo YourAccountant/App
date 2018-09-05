@@ -43,7 +43,8 @@ class Response
         http_response_code($this->code ?? 200);
 
         foreach ($this->cookies as $name => $value) {
-            setcookie($name, $value);
+            list($val, $expiry) = $value;
+            setcookie($name, $val, $expiry, "/");
         }
 
         echo $this->content ?? "";
@@ -61,9 +62,12 @@ class Response
         return $this;
     }
 
-    public function addCookie($name, $value = "")
+    public function addCookie($name, $value, $expiry = null)
     {
-        $this->cookies[$name] = $value;
+        $expiry = $expiry ?? date('Y-m-d H:i:s', strtotime("+1 hour"));
+        $expiry = strtotime($expiry);
+
+        $this->cookies[$name] = [$value, $expiry];
         return $this;
     }
 

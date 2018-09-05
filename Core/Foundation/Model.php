@@ -30,6 +30,12 @@ class Model extends Bootable
         return null;
     }
 
+    public function set($property, $value)
+    {
+        $this->pool->$property = $value;
+        return $this;
+    }
+
     public function insert($data)
     {
         return $this->getDependencies('Connection')
@@ -67,7 +73,6 @@ class Model extends Bootable
                     ->fetch();
 
         $this->pool = $model;
-        $this->setModelByPool();
 
         if (empty($model)) {
             return false;
@@ -87,18 +92,6 @@ class Model extends Bootable
                     ->fetch();
 
         return $count->total > 0 ? true : false;
-    }
-
-    public function setModelByPool()
-    {
-        if (empty($this->pool)) {
-            return $this;
-        }
-
-        foreach ($this->pool as $key => $value) {
-            $this->{$key} = $value;
-        }
-        return $this;
     }
 
     public function getTableName()
