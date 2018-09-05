@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack --config webpack.config.js",
+    "dev": "webpack --watch --config webpack.config.js",
     "build": ""
   },
   "repository": {
@@ -21,6 +21,7 @@
   },
   "description": "",
   "devDependencies": {
+    "axios": "^0.18.0",
     "css-loader": "^1.0.0",
     "mini-css-extract-plugin": "^0.4.1",
     "node-sass": "^4.9.3",
