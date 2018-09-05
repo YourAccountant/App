@@ -14,8 +14,8 @@ if (strtolower($config->env) != 'dev') {
 // clients
 $clients = Migration::table('clients');
 $clients->add('id')->id();
-$clients->add('email')->string()->unique();
-$clients->add('password')->string();
+$clients->add('email')->string(255)->unique();
+$clients->add('password')->string(255);
 $clients->add('created_at')->dateCreate();
 $clients->add('updated_at')->dateUpdate();
 
@@ -40,9 +40,10 @@ $oauthTokens->add('id')->id();
 $oauthTokens->add('client_id')->id(false)->relation('clients', 'id')->nullable();
 $oauthTokens->add('oauth_partner_id')->id(false)->relation('oauth_partners', 'id')->nullable();
 $oauthTokens->add('refresh_token_id')->id(false)->relation('oauth_tokens', 'id')->nullable();
+$oauthTokens->add('is_app')->bool(false);
 $oauthTokens->add('token_type')->string(255);
 $oauthTokens->add('token')->string(255)->unique();
-$oauthTokens->add('date_expiration')->timestamp()->nullable();
+$oauthTokens->add('expiry')->timestamp()->nullable();
 $oauthTokens->add('created_at')->dateCreate();
 $oauthTokens->add('updated_at')->dateUpdate();
 
