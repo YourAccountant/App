@@ -4,35 +4,40 @@ namespace App\Auth;
 
 use \Core\Foundation\Service;
 use \App\Client\Client;
+use \App\Auth\OAuth\OAuthToken;
 
 class AuthService extends Service
 {
     public function isLoggedIn()
     {
-        if (!isset($_SESSION['auth']['isLoggedIn'])) {
-            $_SESSION['auth']['isLoggedIn'] = false;
-        }
-
-        return $_SESSION['auth']['isLoggedIn'] ? true : false;
+        return $this->getSignedinClientId() != null;
     }
 
-    public function signin($email, $password)
+    public function signin($email, $password, $force = false)
     {
-        $client = $this->getDependencies('Connection')
-            ->builder('clients')
-            ->columns("`id`, `password`")
-            ->where('email', '=', $email)
-            ->limit(1)
-            ->exec()
-            ->fetch();
+        $client = new Client();
+        $client->getBy('email', '=', $email);
 
-        if (!$this->verifyHash($client->password, $password)) {
+        // check exists
+        if ($client->poolIsEmpty()) {
             return false;
         }
 
-        $_SESSION['auth']['isLoggedIn'] = true;
-        $_SESSION['auth']['client'] = $client->id;
-        $_SESSION['auth']['date'] = date('Y-m-d H:i:s');
+        // verify pass
+        if (!$force && !$this->verifyHash($client->get('password'), $password)) {
+            return false;
+        }
+
+        // create session token and save client
+        $token = new OAuthToken();
+        $tokenId = $token->create('bearer', $client->get('id'));
+        $token->getBy('id', '=', $tokenId);
+
+        $client->set('token', $token->get('token'));
+        $client->set('expiry', $token->get('expiry'));
+
+        $this->setAuthClient($client);
+
         return true;
     }
 
@@ -65,11 +70,20 @@ class AuthService extends Service
             ->exec();
     }
 
-    public function getSignedInClientId()
+    public function getSignedinClientId()
     {
-        if ($this->isLoggedIn()) {
-            return $_SESSION['auth']['client'];
-        }
+        return $this->getAuthClient()->get('id');
+    }
+
+    public function getAuthClient()
+    {
+        return $this->getApp()->getModel('AuthClient');
+    }
+
+    public function setAuthClient($client)
+    {
+        $this->getApp()->addModel('AuthClient', $client);
+        return $client;
     }
 
     public function hashPassword($password)

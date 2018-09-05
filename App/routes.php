@@ -24,6 +24,7 @@ Router::post("authorize", "OAuthController.authorize")
 
 Router::post("refresh", "OAuthController.refresh")
     ->setMiddleware(['ApiResponse.validJson']);
+
 // Auth
 Router::setPrefix("/api/:version/auth");
 Router::setMiddleware(["ApiResponse.validJson"]);
@@ -39,7 +40,8 @@ Router::setMiddleware([]);
 Router::get("/signout", "AuthController.signout");
 
 Router::setPrefix("/api/:version/client");
-Router::get(":clientId", "ClientController.getClient");
+Router::get(":clientId", "ClientController.getClient")
+    ->setMiddleware('OAuthPolicy.checkBearer');
 
 // app view
 Router::on(404, function (Request $req, Response $res) {

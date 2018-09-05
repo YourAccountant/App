@@ -19,19 +19,25 @@ class AuthController extends Controller
     {
         $body = $req->json();
 
+        // validate
         if (!isset($body->email)) {
             return $res->send(['error' => 'missing email'], 400);
         } elseif (!isset($body->password)) {
             return $res->send(['result' => false, 'error' => 'missing password'], 400);
-        } elseif ($this->getService('AuthService.isLoggedIn')) {
-            return $res->send(['result' => false, 'error' => 'already logged in']);
+        // } elseif ($this->getService('AuthService.isLoggedIn')) {
+            // return $res->send(['result' => false, 'error' => 'already logged in']);
         } elseif (!$this->getService('AuthService.checkEmailExists', $body->email)) {
             return $res->send(['result' => false, 'error' => 'email does not exists'], 400);
         }
 
+        // signin
         if (!$this->getService('AuthService.signin', $body->email, $body->password)) {
             return $res->send(['result' => false, 'error' => 'password or email was wrong'], 403);
         }
+
+        // send cookie
+        $client = $this->getService('AuthService.getAuthClient');
+        $res->addCookie('token', $client->get('token'), $client->get('expiry'));
 
         return $res->send(['result' => true]);
     }

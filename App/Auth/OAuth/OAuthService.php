@@ -3,6 +3,7 @@
 namespace App\Auth\OAuth;
 
 use \Core\Foundation\Service;
+use \App\Client\Client;
 
 class OAuthService extends Service
 {
@@ -32,6 +33,19 @@ class OAuthService extends Service
             return false;
         }
 
+        return true;
+    }
+
+    public function setAuthModel($id)
+    {
+        $client = new Client();
+        $client->getBy('id', '=', $id);
+
+        if ($client->poolIsEmpty()) {
+            return false;
+        }
+
+        $this->getApp()->addModel("AuthClient", $client);
         return true;
     }
 }

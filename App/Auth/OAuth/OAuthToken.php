@@ -4,12 +4,11 @@ namespace App\Auth\OAuth;
 
 use \Core\Foundation\Model;
 use \Core\Support\Str;
+use \Core\Router\Request;
 
 class OAuthToken extends Model
 {
     protected $table = 'oauth_tokens';
-
-    protected $tokenLength = 32;
 
     protected $daysAfterExpiry = 1;
 
@@ -33,7 +32,6 @@ class OAuthToken extends Model
                 ->exec()
                 ->fetch();
 
-        $this->setModelByPool();
         return $this;
     }
 
@@ -46,8 +44,13 @@ class OAuthToken extends Model
                 ->exec()
                 ->fetch();
 
-        $this->setModelByPool();
         return $this;
+    }
+
+    public function checkExpiry($date = null)
+    {
+        $date = $date ?? $this->get('expiry');
+        return $date > date('Y-m-d H:i:s');
     }
 
     public function getExpiryDate()
@@ -55,7 +58,7 @@ class OAuthToken extends Model
         return date('Y-m-d H:i:s', strtotime("+{$this->daysAfterExpiry} days"));
     }
 
-    public function getByRelation($type, $partnerId, $clientId)
+    public function getByRelation($type, $clientId, $partnerId)
     {
         return $this->getDependencies('Connection')
                     ->builder($this->table)
@@ -67,28 +70,37 @@ class OAuthToken extends Model
                     ->fetch();
     }
 
-    public function create($type, $partnerId, $clientId)
+    public function create($type, $clientId, $partnerId = null)
     {
-        if ($type == 'refresh_token') {
-            $token = $this->getByRelation('refresh_token', $partnerId, $clientId);
+        if ($type == 'refresh_token' && $partnerId != null) {
+            $token = $this->getByRelation('refresh_token', $clientId, $partnerId);
 
             if (!empty($token)) {
                 $this->update($token->id, [
                     'token' => $this->generateToken(),
-                    'date_expiration' => $this->getExpiryDate()
+                    'expiry' => $this->getExpiryDate()
                 ]);
 
                 return $token->id;
             }
         }
 
-        return $this->insert([
-            'oauth_partner_id' => $partnerId,
+        $data = [
             'client_id' => $clientId,
             'token_type' => $type,
             'token' => $this->generateToken(),
-            'date_expiration' => $this->getExpiryDate()
-        ]);
+            'expiry' => $this->getExpiryDate()
+        ];
+
+        if ($partnerId != null) {
+            $data['oauth_partner_id'] = $partnerId;
+        }
+
+        if (Request::isAjax()) {
+            $data['is_app'] = 1;
+        }
+
+        return $this->insert($data);
     }
 
     public function refresh($id)
@@ -98,12 +110,12 @@ class OAuthToken extends Model
 
         $this->update($id, [
             'token' => $token,
-            'date_expiration' => $expiry
+            'expiry' => $expiry
         ]);
 
         if (!$this->poolIsEmpty()) {
             $this->pool->token = $token;
-            $this->pool->date_expiration = $expiry;
+            $this->pool->expiry = $expiry;
         }
 
         return $this;
