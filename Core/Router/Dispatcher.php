@@ -7,6 +7,7 @@ use \Core\Contract\Router\RouterContract;
 use \Core\Contract\Container\ContainerContract;
 use \Core\Debug\Debug;
 use \Core\Foundation\Application;
+use \Core\Support\Arr;
 
 /*
 run
@@ -131,7 +132,7 @@ class Dispatcher implements DispatcherContract
             }
         }
 
-        $this->request->params = $params;
+        $this->request->params = Arr::toObject($params);
 
         return $params;
     }

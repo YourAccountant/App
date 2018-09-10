@@ -39,8 +39,6 @@ class Request
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->body = file_get_contents('php://input');
         $this->requestTime = $_SERVER['REQUEST_TIME'];
-        $this->queryParameters = $_GET;
-        $this->postParameters = $_POST;
         $this->host = $this->parsedUrl['host'];
         $this->params = [];
         $this->back = $_SESSION['app']['back'] ?? null;
@@ -79,6 +77,15 @@ class Request
     public static function isAjax()
     {
         return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest');
+    }
+
+    public static function getIp()
+    {
+        return isset($_SERVER['HTTP_CLIENT_IP'])
+            ? $_SERVER['HTTP_CLIENT_IP']
+            : isset($_SERVER['HTTP_X_FORWARDED_FOR'])
+                ? $_SERVER['HTTP_X_FORWARDED_FOR']
+                : $_SERVER['REMOTE_ADDR'];
     }
 
     public function pathIncludes($path)

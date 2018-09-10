@@ -36,6 +36,10 @@ class Model extends Bootable
 
     public function set($property, $value)
     {
+        if (!is_object($this->pool)) {
+            $this->pool = new \stdClass();
+        }
+
         $this->pool->$property = $value;
         return $this;
     }
