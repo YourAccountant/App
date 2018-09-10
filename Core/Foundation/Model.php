@@ -21,8 +21,12 @@ class Model extends Bootable
         return empty($this->pool) ? true : false;
     }
 
-    public function get($property)
+    public function get($property = null)
     {
+        if ($property == null) {
+            return $this->pool;
+        }
+
         if (isset($this->pool->$property)) {
             return $this->pool->$property;
         }

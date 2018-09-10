@@ -40,11 +40,17 @@ class Column
         }
     }
 
+    public function default($value)
+    {
+        $this->default = $value;
+        return $this;
+    }
+
     public function bool($default = true)
     {
         $this->type = 'TINYINT';
         $this->length = 1;
-        $this->default = $default ? 1 : 0;
+        $this->default($default ? 1 : 0);
         return $this;
     }
 
@@ -133,7 +139,7 @@ class Column
 
     public function timestamp()
     {
-        $this->type = "TIMESTAMP";
+        $this->type = "DATETIME";
         $this->length = null;
         return $this;
     }
@@ -141,14 +147,14 @@ class Column
     public function dateCreate()
     {
         $this->timestamp();
-        $this->default = "CURRENT_TIMESTAMP";
+        $this->default("CURRENT_TIMESTAMP");
         return $this;
     }
 
     public function dateUpdate()
     {
         $this->timestamp();
-        $this->default = "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP";
+        $this->default("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
         return $this;
     }
 
