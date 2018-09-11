@@ -11,7 +11,7 @@ class ClientController extends Controller
     public function getClient(Request $req, Response $res)
     {
         $client = new Client();
-        $exists = $client->getBy('id', '=', $req->params['clientId']);
+        $exists = $client->getBy('id', '=', $req->params->clientId);
 
         if ($exists) {
             return $res->send($client);

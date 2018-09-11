@@ -15,8 +15,8 @@ Router::get("/", function ($req, $res) {
     $res->send("Welcome to the API");
 });
 
-Router::setPrefix("/api/:version/oauth");
-Router::get("/:partner/grant", "OAuthController.grant");
+// Router::setPrefix("/api/:version/oauth");
+// Router::get("/:partner/grant", "OAuthController.grant");
     // ->setMiddleware(["AuthPolicy.hasToBeLoggedIn"]);
 
 Router::post("authorize", "OAuthController.authorize")
@@ -41,7 +41,7 @@ Router::get("/signout", "AuthController.signout");
 
 Router::setPrefix("/api/:version/client");
 Router::get(":clientId", "ClientController.getClient")
-    ->setMiddleware('OAuthPolicy.checkBearer');
+    ->setMiddleware('OAuthPolicy.authorize');
 
 // app view
 Router::on(404, function (Request $req, Response $res) {

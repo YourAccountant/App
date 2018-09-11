@@ -33,6 +33,6 @@ $('#get').on('click', function (e) {
     // console.log(getCookie('token'));
 
     $.get('/api/v1/client/1', d => {
-        console.log(d);
+        getCookie("authorization");
     })
 })

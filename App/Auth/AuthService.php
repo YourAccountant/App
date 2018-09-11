@@ -8,11 +8,6 @@ use \App\Auth\OAuth\OAuthToken;
 
 class AuthService extends Service
 {
-    public function isLoggedIn()
-    {
-        return $this->getSignedinClientId() != null;
-    }
-
     public function signin($email, $password, $force = false)
     {
         $client = new Client();
@@ -28,17 +23,7 @@ class AuthService extends Service
             return false;
         }
 
-        // create session token and save client
-        $token = new OAuthToken();
-        $tokenId = $token->create('bearer', $client->get('id'));
-        $token->getBy('id', '=', $tokenId);
-
-        $client->set('token', $token->get('token'));
-        $client->set('expiry', $token->get('expiry'));
-
-        $this->setAuthClient($client);
-
-        return true;
+        return $this->getService("OAuthService.createSessionToken", $client->get('id'));
     }
 
     public function signout()
@@ -52,7 +37,7 @@ class AuthService extends Service
         $count = $this->getDependencies()
             ->get('Connection')
             ->builder('clients')
-            ->columns("COUNT(*) as emails")
+            ->columns("COUNT(email) as emails")
             ->where('email', '=', $email)
             ->limit(1)
             ->exec()
@@ -63,21 +48,26 @@ class AuthService extends Service
 
     public function signup(Client $client)
     {
-        $this->getDependencies()
+        return $this->getDependencies()
             ->get('Connection')
             ->builder('clients')
             ->insert(['email' => $client->email, 'password' => $this->hashPassword($client->password)])
             ->exec();
     }
 
-    public function getSignedinClientId()
+    public function isLoggedIn()
     {
-        return $this->getAuthClient()->get('id');
+        return $this->getClientId() != null;
+    }
+
+    public function getClientId()
+    {
+        return $this->getAuthClient()->get('id') ?? null;
     }
 
     public function getAuthClient()
     {
-        return $this->getApp()->getModel('AuthClient');
+        return $this->getApp()->getModel('AuthClient') ?? null;
     }
 
     public function setAuthClient($client)

@@ -10,19 +10,21 @@
 <body>
 
     <!-- <div id="app"></div> -->
-
+    <p>signin</p>
     <form method="POST" id="signin" action="/api/v1/auth/signin">
         <input type="text" name="email">
         <input type="password" name="password">
         <button>submit</button>
     </form>
 
+    <p>signup</p>
     <form method="POST" id="signup" action="/api/v1/auth/signup">
         <input type="text" name="email">
         <input type="password" name="password">
         <button>submit</button>
     </form>
 
+    <p>get user</p>
     <button id="get">get</button>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
