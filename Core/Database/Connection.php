@@ -117,6 +117,7 @@ class Connection
             }
 
             if (self::$config->isDev()) {
+                echo $e->getMessage() . "\n";
                 Debug::print();
                 die;
             }
@@ -126,6 +127,7 @@ class Connection
             }
 
             if (self::$config->isDev()) {
+                echo $e->getMessage() . "\n";
                 Debug::print();
                 die;
             }
