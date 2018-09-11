@@ -19,6 +19,16 @@ $clients->add('password')->string(255);
 $clients->add('created_at')->dateCreate();
 $clients->add('updated_at')->dateUpdate();
 
+// login sessions
+$sessions = Migration::table('sessions');
+$sessions->add('id')->id();
+$sessions->add('client_id')->id(false)->relation('clients', 'id');
+$sessions->add('ip')->string(255);
+$sessions->add('authorization')->text();
+$sessions->add('expiry')->timestamp();
+$sessions->add('created_at')->dateCreate();
+$sessions->add('updated_at')->dateUpdate();
+
 // subscriptions
 $subscriptions = Migration::table('subscriptions');
 $subscriptions->add('id')->id();
@@ -37,13 +47,11 @@ $oauthPartner->add('redirect_url')->string(255)->nullable();
 
 $oauthTokens = Migration::table('oauth_tokens');
 $oauthTokens->add('id')->id();
-$oauthTokens->add('client_id')->id(false)->relation('clients', 'id')->nullable();
-$oauthTokens->add('oauth_partner_id')->id(false)->relation('oauth_partners', 'id')->nullable();
-$oauthTokens->add('refresh_token_id')->id(false)->relation('oauth_tokens', 'id')->nullable();
-$oauthTokens->add('is_app')->bool(false);
+$oauthTokens->add('client_id')->id(false)->relation('clients', 'id');
+$oauthTokens->add('oauth_partner_id')->id(false)->relation('oauth_partners', 'id');
 $oauthTokens->add('token_type')->string(255);
-$oauthTokens->add('token')->string(255)->unique();
-$oauthTokens->add('expiry')->timestamp()->nullable();
+$oauthTokens->add('token')->text();
+$oauthTokens->add('expiry')->timestamp();
 $oauthTokens->add('created_at')->dateCreate();
 $oauthTokens->add('updated_at')->dateUpdate();
 
@@ -59,7 +67,8 @@ $administrations->add('updated_at')->dateUpdate();
 // permissions
 $permissions = Migration::table('permissions');
 $permissions->add('id')->id();
-$permissions->add('administration_id')->id(false)->relation('administrations', 'id');
+$permissions->add('parent_type')->id(false)->index();
+$permissions->add('parent_id')->id(false)->index();
 $permissions->add('key')->string();
 $permissions->add('value')->string();
 $permissions->add('created_at')->dateCreate();

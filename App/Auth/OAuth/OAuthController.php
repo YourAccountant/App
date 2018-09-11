@@ -8,39 +8,16 @@ use \Core\Router\Response;
 
 class OAuthController extends Controller
 {
-    private $guzzle;
-
-    public function boot()
-    {
-        $this->guzzle = new \GuzzleHttp\Client();
-    }
-
     public function grant(Request $req, Response $res)
     {
-        if(!$this->getService('AuthService.signin', "k@h.nl", "123")) {
-            $this->printLog();
-        }
+        $slug = $req->params->partner;
 
-        $slug = $req->params['partner'];
         $partner = new OAuthPartner();
+        $partner->getBy('slug', '=', $slug);
 
-        if (!$partner->getBy('slug', '=', $slug)) {
+        if (empty($partner->get())) {
             return $res->send(" <h1>Partner is not in our system</h1> ");
         }
-
-        $token = new OAuthToken();
-        $tokenId = $token->create('refresh_token', $this->getService('AuthService.getSignedInClientId'), $partner->get('id'));
-        $token->getBy('id', '=', $tokenId);
-
-        if (!$this->getService('OAuthService.sendGrant', $partner->get('redirect_url'), $token)) {
-            return $res->send(" <h1>Failed to grant permission</h1> ");
-        }
-
-        if (isset($req->queryParameters['success'])) {
-            return $res->redirect(urldecode($req->queryParameters['success']));
-        }
-
-        // redirect granted page
     }
 
     public function authorize(Request $req, Response $res)
@@ -67,20 +44,13 @@ class OAuthController extends Controller
 
     public function refresh(Request $req, Response $res)
     {
-        $refreshToken = $req->json()->refresh_token;
+        $payload = $this->getService("OAuthService.refreshAccessTokeToken", $req->json()->refresh_token);
 
-        if ($refreshToken == null) {
-            return $res->send(['error' => 'Not authorized'], 402);
-        }
-
-        $token = new OAuthToken();
-        $token->getByRefreshToken($refreshToken);
-
-        if ($token->poolIsEmpty()) {
-            return $res->send(['error' => 'token does not exist'], 400);
-        }
-
-        $token->refresh($token->get('id'));
-        return $res->send(['action' => 'refresh', 'token' => $token->get('token'), 'expiry_date' => $token->get('expiry')]);
+        $res->send([
+            'action' => 'refresh',
+            'token_type' => $payload['token_type'],
+            'token' => $payload['access_token'],
+            'expiry' => $payload['expiry']
+        ], 200);
     }
 }

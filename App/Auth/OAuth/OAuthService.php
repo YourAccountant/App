@@ -4,6 +4,8 @@ namespace App\Auth\OAuth;
 
 use \Core\Foundation\Service;
 use \App\Client\Client;
+use \App\Auth\Session;
+use \Core\Router\Request;
 
 class OAuthService extends Service
 {
@@ -21,6 +23,7 @@ class OAuthService extends Service
                 ],
                 'json' => [
                     'action' => 'grant',
+                    'token_type' => OAuthToken::REFRESH_TOKEN,
                     'token' => $token->get('token'),
                     'reference' => $_GET['reference'] ?? null
                 ]
@@ -36,16 +39,76 @@ class OAuthService extends Service
         return true;
     }
 
-    public function setAuthModel($id)
+    public function createRefreshToken($clientId, $partnerId)
     {
-        $client = new Client();
-        $client->getBy('id', '=', $id);
+        $type = OAuthToken::REFRESH_TOKEN;
 
-        if ($client->poolIsEmpty()) {
-            return false;
-        }
+        $expiry = OAuthToken::getExpiryDate($type);
 
-        $this->getApp()->addModel("AuthClient", $client);
-        return true;
+        $payload = [
+            'token_type' => $type,
+            'client_id' => $clientId,
+            'expiry' => $expiry,
+            'create_date' => date('Y-m-d H:i:s'),
+            'partner_id' => $partnerId
+        ];
+
+        $token = new OAuthToken();
+
+        $jwt = $token->generateToken($payload, $type);
+
+        $token->insert([
+            'client_id' => $clientId,
+            'oauth_partner_id' => $partnerId,
+            'token_type' => $type,
+            'token' => $jwt
+        ]);
+
+        return $jwt;
+    }
+
+    public function createSessionToken($clientId)
+    {
+        $type = OAuthToken::SESSION_TOKEN;
+        $expiry = OAuthToken::getExpiryDate($type);
+
+        $payload = [
+            'token_type' => $type,
+            'client_id' => $clientId,
+            'expiry' => $expiry,
+            'ip' => Request::getIp(),
+            'create_date' => date('Y-m-d H:i:s')
+        ];
+
+        $token = new OAuthToken();
+        $jwt = $token->generateToken($payload, $type);
+
+        $session = new Session();
+
+        $session->insert([
+            'client_id' => $clientId,
+            'ip' => Request::getIp(),
+            'authorization' => $jwt,
+            'expiry' => $expiry
+        ]);
+
+        return $jwt;
+    }
+
+    public function refreshAccessTokeToken($refreshToken)
+    {
+        $payload = OAuthToken::decodeToken($refreshToken, OAuthToken::REFRESH_TOKEN);
+
+        $token = new OAuthToken();
+
+        $jwtPayload = [
+            'token_type' => OAuthToken::ACCESS_TOKEN,
+            'token' => $refreshToken,
+            'client_id' => $payload->client_id,
+            'expiry' => $token->getExpiryDate(OAuthToken::ACCESS_TOKEN),
+            'create_date' => date('Y-m-d H:i:s')
+        ];
+
+        return $token->generateToken($jwtPayload, OAuthToken::ACCESS_TOKEN);
     }
 }

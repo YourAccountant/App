@@ -6,68 +6,57 @@ use \Core\Foundation\Policy;
 use \Core\Router\Request;
 use \Core\Router\Response;
 use \App\Client\Client;
+use \App\Auth\Session;
 
 class OAuthPolicy extends Policy
 {
-    public $error_codes;
+    public $codes;
 
     public function boot() {
         $this->codes = new \stdClass();
         $this->codes->not_authorized = 1000;
         $this->codes->not_found = 1001;
         $this->codes->expired = 1002;
+        $this->codes->invalid = 1003;
     }
 
-    public function checkBearer(Request $req, Response $res)
+    public function authorize(Request $req, Response $res)
     {
-        if (Request::isAjax()) {
-            $bearer = $_COOKIE['token'] ?? null;
-        } else {
-            $bearer = $req->headers->authorization ?? null;
-        }
+        $bearer = $req->headers->authorization ?? $_COOKIE['authorization'] ?? null;
 
+        // check bearer exists
         if ($bearer == null) {
             return $res->send([
-                'error' => 'not authorized',
-                'code' => $this->codes->not_authorized
+                "error" => "not authorized",
+                "code" => $this->codes->not_authorized
             ], 402);
         }
 
-        $bearer = str_replace('Bearer ', '', $bearer);
+        $type = isset($_COOKIE['authorization']) ? OAuthToken::SESSION_TOKEN : OAuthToken::ACCESS_TOKEN;
 
-        $token = new OAuthToken();
-        $token->getByBearer($bearer);
+        // decode jwt
+        $payload = OAuthToken::decodeToken($bearer, $type);
 
-        if ($token->poolIsEmpty()) {
+        // check required fields payload for both session and access tokens
+        if ($payload == null) {
             return $res->send([
-                'error' => 'token not found',
-                'code' => $this->codes->not_found
-            ], 403);
+                "error" => "invalid token",
+                "code" => $this->codes->invalid
+            ], 402);
         }
 
-        if (!$token->checkExpiry()) {
-            if (Request::isAjax()) {
-                $token->refresh($token->get('id'));
-
-                $res->addCookie("token", $token->get('token'), $token->get('expiry'));
-
-                return $res->send([
-                    'error' => 'token expired',
-                    'code' => $this->codes->expired,
-                ]);
-            }
-
+        // check token expired
+        if (!OAuthToken::checkExpiry($payload->expiry)) {
             return $res->send([
-                'error' => 'token expired',
-                'code' => $this->codes->expired
+                "error" => "token expired",
+                "code" => $this->codes->expired
             ], 400);
         }
 
+        // set session client
         $client = new Client();
-        $client->getBy('id', '=', $token->get('client_id'));
-        $client->set('token', $token->get('token'));
-        $this->getService('AuthService.setAuthClient', $client);
+        $client->set('id', $payload->client_id);
 
-        $req->set('token', $token);
+        $this->getService("AuthService.setAuthClient", $client);
     }
 }
