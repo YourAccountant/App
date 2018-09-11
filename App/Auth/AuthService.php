@@ -5,6 +5,7 @@ namespace App\Auth;
 use \Core\Foundation\Service;
 use \App\Client\Client;
 use \App\Auth\OAuth\OAuthToken;
+use \App\Auth\Session;
 
 class AuthService extends Service
 {
@@ -28,7 +29,17 @@ class AuthService extends Service
 
     public function signout()
     {
-        unset($_SESSION['auth']);
+        if (!isset($_COOKIE['authorization'])) {
+            return true;
+        }
+
+        $session = new Session();
+        $session->getBy("authorization", "=", $_COOKIE['authorization']);
+
+        if ($session->get() != null) {
+            $session->delete($session->get('id'));
+        }
+
         return true;
     }
 

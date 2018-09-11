@@ -66,9 +66,8 @@ class AuthController extends Controller
 
     public function signout(Request $req, Response $res)
     {
-        if (!$this->getService('AuthService.signout')) {
-            return $res->send(['result' => false], 400);
-        }
+        $this->getService('AuthService.signout');
+        $res->addCookie("authorization", null, -1);
 
         return $res->send(['result' => true]);
     }

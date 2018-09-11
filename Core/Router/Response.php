@@ -65,7 +65,10 @@ class Response
     public function addCookie($name, $value, $expiry = null)
     {
         $expiry = $expiry ?? date('Y-m-d H:i:s', strtotime("+1 hour"));
-        $expiry = strtotime($expiry);
+
+        if ($expiry > -1) {
+            $expiry = strtotime($expiry);
+        }
 
         $this->cookies[$name] = [$value, $expiry];
         return $this;

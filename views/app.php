@@ -24,6 +24,8 @@
         <button>submit</button>
     </form>
 
+    <a href="/api/v1/auth/signout" id="signout">signout</a>
+    <br><br>
     <p>get user</p>
     <button id="get">get</button>
 
