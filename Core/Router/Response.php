@@ -38,9 +38,15 @@ class Response
         return $this;
     }
 
-    public function json($content, $code)
+    public function json($content, $code = 200)
     {
         $this->addHeader('Content-type', 'application/json');
+        return $this->send($content, $code);
+    }
+
+    public function xml($content, $code = 200)
+    {
+        $this->addHeader('Content-type', 'text/xml');
         return $this->send($content, $code);
     }
 
