@@ -6,3 +6,5 @@ dbPort=
 dbDatabase=
 dbUser=
 dbPass=
+
+jwtSecret=

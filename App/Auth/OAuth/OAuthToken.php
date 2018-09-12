@@ -25,6 +25,13 @@ class OAuthToken extends Model
 
     private static $secret = "jwt_secret"; // this is temporary
 
+    public function __construct()
+    {
+        if (self::$secret == null) {
+            self::$secret = $this->getConfig('jwtSecret');
+        }
+    }
+
     public static function getSecret($type)
     {
         return self::$secret;

@@ -17,6 +17,11 @@ class Bootable
         return Application::$instance->root;
     }
 
+    protected function getSetting($key)
+    {
+        return $this->getDependencies('Config')->get($key);
+    }
+
     protected function getServices()
     {
         return Application::$instance->services;
