@@ -26,11 +26,12 @@ class OAuthPartner extends Model
         return $secret;
     }
 
-    public function create($data)
+    public function create($clientId, $data)
     {
         $data['slug'] = $this->generateSlug($data['name']);
         $data['secret'] = $this->generateSecret();
         return $this->insert([
+            'client_id' => $clientId,
             'name' => $data['name'],
             'slug' => $data['slug'],
             'desc' => $data['desc'] ?? '',

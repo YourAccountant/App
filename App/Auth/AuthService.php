@@ -59,11 +59,12 @@ class AuthService extends Service
 
     public function signup(Client $client)
     {
-        return $this->getDependencies()
-            ->get('Connection')
-            ->builder('clients')
-            ->insert(['email' => $client->get('email'), 'password' => $this->hashPassword($client->get('password'))])
-            ->exec();
+        return $this->insert([
+            'email' => $client->get('email'),
+            'password' => $this->hashPassword($client->get('password')),
+            'subscription' => $client->get('subscription') ?? $client->getDefault('subscription'),
+            'role' => $client->get('role') ?? $client->getDefault('role')
+        ]);
     }
 
     public function isLoggedIn()

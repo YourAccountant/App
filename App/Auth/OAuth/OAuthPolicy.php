@@ -27,7 +27,7 @@ class OAuthPolicy extends Policy
 
         // check bearer exists
         if ($bearer == null) {
-            return $res->send([
+            return $res->json([
                 "error" => "not authorized",
                 "code" => $this->codes->not_authorized
             ], 401);
@@ -40,7 +40,7 @@ class OAuthPolicy extends Policy
 
         // check required fields payload for both session and access tokens
         if ($payload == null) {
-            return $res->send([
+            return $res->json([
                 "error" => "invalid token",
                 "code" => $this->codes->invalid
             ], 401);
@@ -48,7 +48,7 @@ class OAuthPolicy extends Policy
 
         // check token expired
         if (!OAuthToken::checkExpiry($payload->expiry)) {
-            return $res->send([
+            return $res->json([
                 "error" => "token expired",
                 "code" => $this->codes->expired
             ], 400);

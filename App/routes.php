@@ -8,7 +8,7 @@ use \Core\Router\Response;
 Router::setPrefix("/api/:version/");
 
 Router::get("/", function ($req, $res) {
-    $res->send("Welcome to the API");
+    $res->json("Welcome to the API");
 });
 
 /**
@@ -16,7 +16,7 @@ Router::get("/", function ($req, $res) {
  */
 Router::setPrefix("/api/:version/oauth");
 Router::post("/partner", "OAuthController.createPartner")
-    ->setMiddleware(["ApiResponse.validJson"]);
+    ->setMiddleware(["OAuthPolicy.authorize", "ApiResponse.validJson"]);
 
 Router::get("/:partner/grant", "OAuthController.grant")
     ->setMiddleware(["OAuthPolicy.authorize"]);
@@ -50,7 +50,7 @@ Router::get("/client/:clientId", "ClientController.getClient")
  */
 Router::on(404, function (Request $req, Response $res) {
     if ($req->pathIncludes("/api/")) {
-        return $res->send([
+        return $res->json([
             "error" => "404"
         ], 404);
     }

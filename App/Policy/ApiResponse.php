@@ -17,7 +17,7 @@ class ApiResponse extends Policy
             return;
         }
 
-        return $res->send(['error' => 'invalid json'], 400);
+        return $res->json(['error' => 'invalid json'], 400);
     }
 
     public function isAjax(Request $req, Response $res)
@@ -26,6 +26,6 @@ class ApiResponse extends Policy
             return;
         }
 
-        return $res->send(['error' => 'unknown server'], 401);
+        return $res->json(['error' => 'unknown server'], 401);
     }
 }

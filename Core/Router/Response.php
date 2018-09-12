@@ -27,11 +27,21 @@ class Response
 
     public function send($content = null, $code = 200)
     {
+        if (is_array($content)) {
+            $this->addHeader('Content-type', 'application/json');
+        }
+
         $this->code = $code;
         $this->hasResponse = true;
-        $this->content = (string) is_array($content) ? json_encode($content) : $content;
+        $this->content = is_array($content) ? json_encode($content) : $content;
 
         return $this;
+    }
+
+    public function json($content, $code)
+    {
+        $this->addHeader('Content-type', 'application/json');
+        return $this->send($content, $code);
     }
 
     public function run()

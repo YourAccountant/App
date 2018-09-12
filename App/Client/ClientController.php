@@ -14,9 +14,9 @@ class ClientController extends Controller
         $exists = $client->getBy('id', '=', $req->params->clientId);
 
         if ($exists) {
-            return $res->send($client);
+            return $res->json($client);
         } else {
-            return $res->send(['result' => false, 'error' => 'user does not exists'], 400);
+            return $res->json(['result' => false, 'error' => 'user does not exists'], 400);
         }
     }
 }

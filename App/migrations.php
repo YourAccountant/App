@@ -16,6 +16,8 @@ $clients = Migration::table('clients');
 $clients->add('id')->id();
 $clients->add('email')->string(255)->unique();
 $clients->add('password')->string(255);
+$clients->add('subscription')->string(25)->default('none');
+$clients->add('role')->string(25)->default('client');
 $clients->add('created_at')->dateCreate();
 $clients->add('updated_at')->dateUpdate();
 
@@ -29,10 +31,6 @@ $sessions->add('expiry')->timestamp();
 $sessions->add('created_at')->dateCreate();
 $sessions->add('updated_at')->dateUpdate();
 
-// subscriptions
-$subscriptions = Migration::table('subscriptions');
-$subscriptions->add('id')->id();
-
 // payments
 $payments = Migration::table('payments');
 $payments->add('id')->id();
@@ -40,6 +38,7 @@ $payments->add('id')->id();
 // oauth clients
 $oauthPartner = Migration::table('oauth_partners');
 $oauthPartner->add('id')->id();
+$oauthPartner->add('client_id')->id(false)->relation('clients', 'id');
 $oauthPartner->add('slug')->string(255)->unique();
 $oauthPartner->add('name')->string(255);
 $oauthPartner->add('secret')->string(25)->unique();
