@@ -37,7 +37,8 @@ class Migration
         self::$tables = array_merge(array_flip($order), self::$tables);
     }
 
-    public static function get() {
+    public static function get()
+    {
         return self::$tables;
     }
 }

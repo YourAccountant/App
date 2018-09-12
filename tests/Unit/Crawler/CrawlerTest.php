@@ -25,7 +25,8 @@ class CrawlerTest extends TestCase
         return json_decode($countries);
     }
 
-    private function countryNameAsKey() {
+    private function countryNameAsKey()
+    {
         $countries = $this->getCountries();
 
         if (isset($countries->netherlands)) {
@@ -66,5 +67,4 @@ class CrawlerTest extends TestCase
 
         $this->assertTrue(true);
     }
-
 }

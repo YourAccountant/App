@@ -8,4 +8,3 @@ class OAuthPartner extends Model
 {
     protected $table = 'oauth_partners';
 }
-

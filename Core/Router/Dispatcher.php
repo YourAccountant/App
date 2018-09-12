@@ -54,8 +54,7 @@ class Dispatcher implements DispatcherContract
 
         Response::addHistory();
         $this->response = new Response();
-        if (isset($this->routes[$this->request->method]))
-        {
+        if (isset($this->routes[$this->request->method])) {
             foreach ($this->routes[$this->request->method] as $route) {
                 if (!$route->match($this->request->path)) {
                     continue;

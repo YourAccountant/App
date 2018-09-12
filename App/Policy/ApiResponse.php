@@ -28,5 +28,4 @@ class ApiResponse extends Policy
 
         return $res->send(['error' => 'unknown server'], 401);
     }
-
 }

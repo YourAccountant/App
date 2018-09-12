@@ -12,7 +12,8 @@ class OAuthPolicy extends Policy
 {
     public $codes;
 
-    public function boot() {
+    public function boot()
+    {
         $this->codes = new \stdClass();
         $this->codes->not_authorized = 1000;
         $this->codes->not_found = 1001;
