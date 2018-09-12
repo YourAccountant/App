@@ -30,9 +30,7 @@ function getCookie(name) {
 }
 
 $('#get').on('click', function (e) {
-    // console.log(getCookie('token'));
-
-    $.get('/api/v1/client/1', d => {
+    $.get('/api/v1/client/me', d => {
         getCookie("authorization");
     })
 })
