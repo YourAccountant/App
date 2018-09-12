@@ -56,8 +56,8 @@ class AuthController extends Controller
         }
 
         $client = new Client();
-        $client->email = $body->email;
-        $client->password = $body->password;
+        $client->set('email', $body->email);
+        $client->set('password', $body->password);
 
         $this->getService('AuthService.signup', $client);
 

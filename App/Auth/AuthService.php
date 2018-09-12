@@ -62,7 +62,7 @@ class AuthService extends Service
         return $this->getDependencies()
             ->get('Connection')
             ->builder('clients')
-            ->insert(['email' => $client->email, 'password' => $this->hashPassword($client->password)])
+            ->insert(['email' => $client->get('email'), 'password' => $this->hashPassword($client->get('password'))])
             ->exec();
     }
 
