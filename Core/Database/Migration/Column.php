@@ -163,7 +163,11 @@ class Column
         $length = $this->length != null ? "({$this->length})" : "";
         $null = $this->nullable ? "" : "NOT NULL";
         $primary = $this->primary ? "AUTO_INCREMENT" : "";
-        $default = $this->default != null ? "DEFAULT {$this->default}" : "";
+        if (in_array(strtolower($this->type), ['varchar', 'text', 'char']) || strpos(strtolower($this->type), 'text') !== false) {
+            $default = $this->default != null ? "DEFAULT '$this->default'" : "";
+        } else {
+            $default = $this->default != null ? "DEFAULT $this->default" : "";
+        }
 
         return " `{$this->name}` {$this->type}{$length} {$null} {$default} {$primary} ";
     }
