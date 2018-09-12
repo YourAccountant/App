@@ -45,16 +45,7 @@ class AuthService extends Service
 
     public function checkEmailExists($email)
     {
-        $count = $this->getDependencies()
-            ->get('Connection')
-            ->builder('clients')
-            ->columns("COUNT(email) as emails")
-            ->where('email', '=', $email)
-            ->limit(1)
-            ->exec()
-            ->fetch();
-
-        return ($count->emails > 0);
+        return $this->exists('email', '=', $email);
     }
 
     public function signup(Client $client)
