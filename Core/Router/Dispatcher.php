@@ -93,7 +93,9 @@ class Dispatcher implements DispatcherContract
     private function execRoute($route)
     {
         $this->createParams($route);
-        $this->execMiddleware($route->middleware);
+        if (!$route->noMiddleware) {
+            $this->execMiddleware($route->middleware);
+        }
 
         if (!$this->response->hasResponse()) {
             $callback = $route->callback;
@@ -115,7 +117,7 @@ class Dispatcher implements DispatcherContract
                     $this->policies->run($middleware, [$this->request, $this->response]);
                 }
 
-                if (!$this->response->hasResponse()) {
+                if ($this->response->hasResponse()) {
                     break;
                 }
             }
