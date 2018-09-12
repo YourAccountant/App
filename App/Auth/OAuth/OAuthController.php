@@ -25,7 +25,7 @@ class OAuthController extends Controller
         $refreshToken = $req->json()->refresh_token;
 
         if ($refreshToken == null) {
-            return $res->send(['error' => 'Not authorized'], 402);
+            return $res->send(['error' => 'Not authorized'], 401);
         }
 
         $token = new OAuthToken();

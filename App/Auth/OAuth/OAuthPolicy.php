@@ -29,7 +29,7 @@ class OAuthPolicy extends Policy
             return $res->send([
                 "error" => "not authorized",
                 "code" => $this->codes->not_authorized
-            ], 402);
+            ], 401);
         }
 
         $type = isset($_COOKIE['authorization']) ? OAuthToken::SESSION_TOKEN : OAuthToken::ACCESS_TOKEN;
@@ -42,7 +42,7 @@ class OAuthPolicy extends Policy
             return $res->send([
                 "error" => "invalid token",
                 "code" => $this->codes->invalid
-            ], 402);
+            ], 401);
         }
 
         // check token expired
