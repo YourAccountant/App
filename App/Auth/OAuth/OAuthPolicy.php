@@ -42,7 +42,7 @@ class OAuthPolicy extends Policy
         if ($payload == null) {
             return $res->json([
                 "error" => "invalid token",
-                "code" => $this->codes->invalid
+                "code" => $this->codes->not_authorized
             ], 401);
         }
 
