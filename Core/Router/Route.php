@@ -18,6 +18,8 @@ class Route implements RouteContract
 
     public $params = [];
 
+    public $noMiddleware = false;
+
     public function __construct(string $method, string $route, array $middleware = [], $callback)
     {
         $this->method = $method;
@@ -25,6 +27,12 @@ class Route implements RouteContract
         $this->middleware = $middleware;
         $this->callback = $callback;
         $this->setPattern();
+    }
+
+    public function noMiddleware()
+    {
+        $this->noMiddleware = true;
+        return $this;
     }
 
     public function setMiddleware($middleware = [])
