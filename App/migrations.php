@@ -42,6 +42,7 @@ $oauthPartner = Migration::table('oauth_partners');
 $oauthPartner->add('id')->id();
 $oauthPartner->add('slug')->string(255)->unique();
 $oauthPartner->add('name')->string(255);
+$oauthPartner->add('secret')->string(25)->unique();
 $oauthPartner->add('desc')->text()->nullable();
 $oauthPartner->add('redirect_url')->string(255)->nullable();
 

@@ -1,6 +1,6 @@
 require('../scss/bundle.scss');
 
-$('#signin, #signup').on('submit', function(e) {
+$('#signin, #signup, #create-partner').on('submit', function(e) {
     e.preventDefault();
 
     let data = $(this).serializeArray()
@@ -23,14 +23,8 @@ $('#signin, #signup').on('submit', function(e) {
     })
 });
 
-function getCookie(name) {
-  var value = "; " + document.cookie;
-  var parts = value.split("; " + name + "=");
-  if (parts.length == 2) return parts.pop().split(";").shift();
-}
-
 $('#get').on('click', function (e) {
     $.get('/api/v1/client/me', d => {
-        getCookie("authorization");
+        console.log(d);
     })
 })

@@ -8,6 +8,31 @@ use \Core\Router\Response;
 
 class OAuthController extends Controller
 {
+    public function createPartner(Request $req, Response $res)
+    {
+        $data = $req->json();
+
+        if (!isset($data->name) || $data->name == null) {
+            return $res->send([
+                "error" => "missing name"
+            ], 400);
+        }
+
+        $partner = new OAuthPartner();
+        if ($partner->exists("name", "=", $data->name)) {
+            return $res->send([
+                "error" => "name already exists"
+            ]);
+        }
+
+        $id = $partner->create([
+            "name" => $data->name,
+            "desc" => $data->desc ?? ""
+        ]);
+
+        return $res->send(["success" => true], 201);
+    }
+
     public function grant(Request $req, Response $res)
     {
         $slug = $req->params->partner;

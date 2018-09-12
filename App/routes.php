@@ -15,6 +15,9 @@ Router::get("/", function ($req, $res) {
  * OAuth
  */
 Router::setPrefix("/api/:version/oauth");
+Router::post("/partner", "OAuthController.createPartner")
+    ->setMiddleware(["ApiResponse.validJson"]);
+
 Router::get("/:partner/grant", "OAuthController.grant")
     ->setMiddleware(["OAuthPolicy.authorize"]);
 
