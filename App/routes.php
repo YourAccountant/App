@@ -4,13 +4,6 @@ use \Core\Router\Router;
 use \Core\Router\Request;
 use \Core\Router\Response;
 
-// api
-Router::setPrefix("/api/:version/");
-
-Router::get("/", function ($req, $res) {
-    $res->json("Welcome to the API");
-});
-
 /**
  * OAuth
  */

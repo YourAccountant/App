@@ -51,7 +51,7 @@ class AuthService extends Service
 
     public function signup(Client $client)
     {
-        return $this->insert([
+        return $client->insert([
             'email' => $client->get('email'),
             'password' => $this->hashPassword($client->get('password')),
             'subscription' => $client->get('subscription') ?? $client->getDefault('subscription'),

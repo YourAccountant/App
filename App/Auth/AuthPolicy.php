@@ -8,17 +8,4 @@ use \Core\Router\Response;
 
 class AuthPolicy extends Policy
 {
-    public function confirmCrsf(Request $req, Response $res)
-    {
-        if (!isset($this->post->csrf) && !isset($req->cookie->csrf)) {
-            return;
-        }
-
-        if ($_POST['csrf'] != $req->cookie->csrf) {
-            return $res->json([
-                'error' => 'failed to authorize csrf'
-            ], 401);
-        }
-
-    }
 }

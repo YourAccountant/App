@@ -49,6 +49,7 @@ class Request
         $this->files = Arr::toObject($_FILES);
         $this->post = Arr::toObject($_POST);
         $this->get = Arr::toObject($_GET);
+        $this->server = Arr::toObject($_SERVER);
 
         Debug::add('routing', 'request', get_object_vars($this));
     }
