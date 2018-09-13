@@ -23,7 +23,7 @@ class OAuthPolicy extends Policy
 
     public function authorize(Request $req, Response $res)
     {
-        $bearer = $req->headers->authorization ?? $_COOKIE['authorization'] ?? null;
+        $bearer = $req->headers->authorization ?? $req->cookies->authorization ?? null;
 
         // check bearer exists
         if ($bearer == null) {
@@ -33,7 +33,7 @@ class OAuthPolicy extends Policy
             ], 401);
         }
 
-        $type = isset($_COOKIE['authorization']) ? OAuthToken::SESSION_TOKEN : OAuthToken::ACCESS_TOKEN;
+        $type = isset($req->cookies->authorization) ? OAuthToken::SESSION_TOKEN : OAuthToken::ACCESS_TOKEN;
 
         // decode jwt
         $payload = OAuthToken::decodeToken($bearer, $type);

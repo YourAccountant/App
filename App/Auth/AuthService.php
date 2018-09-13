@@ -27,14 +27,14 @@ class AuthService extends Service
         return $this->getService("OAuthService.createSessionToken", $client->get('id'));
     }
 
-    public function signout()
+    public function signout($authorization = null)
     {
-        if (!isset($_COOKIE['authorization'])) {
+        if ($authorization == null) {
             return true;
         }
 
         $session = new Session();
-        $session->getBy("authorization", "=", $_COOKIE['authorization']);
+        $session->getBy("authorization", "=", $authorization);
 
         if ($session->get() != null) {
             $session->delete($session->get('id'));
@@ -45,7 +45,8 @@ class AuthService extends Service
 
     public function checkEmailExists($email)
     {
-        return $this->exists('email', '=', $email);
+        $client = new Client();
+        return $client->exists('email', '=', $email);
     }
 
     public function signup(Client $client)
