@@ -5,8 +5,8 @@ use \Core\Router\Request;
 use \Core\Router\Response;
 
 /**
- * OAuth
- */
+OAuth backlog
+
 Router::setPrefix("/api/:version/oauth");
 Router::post("/partner", "OAuthController.createPartner")
     ->setMiddleware(["OAuthPolicy.authorize", "ApiResponse.validJson"]);
@@ -19,6 +19,7 @@ Router::post("authorize", "OAuthController.authorize")
 
 Router::post("refresh", "OAuthController.refresh")
     ->setMiddleware(['ApiResponse.validJson']);
+ */
 
 /**
  * Session Auth
