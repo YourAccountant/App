@@ -10,7 +10,7 @@ class AuthPolicy extends Policy
 {
     public function confirmCrsf(Request $req, Response $res)
     {
-        if (!isset($_POST['csrf']) && !isset($req->cookie->csrf)) {
+        if (!isset($this->post->csrf) && !isset($req->cookie->csrf)) {
             return;
         }
 

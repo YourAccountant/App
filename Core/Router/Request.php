@@ -43,9 +43,12 @@ class Request
         $this->host = $this->parsedUrl['host'];
         $this->params = [];
         $this->back = $_SESSION['app']['back'] ?? null;
+
         $this->headers = Arr::toObject(getallheaders());
         $this->cookies = Arr::toObject($_COOKIE);
-        $this->files = Arr::toObject($_FILES ?? []);
+        $this->files = Arr::toObject($_FILES);
+        $this->post = Arr::toObject($_POST);
+        $this->get = Arr::toObject($_GET);
 
         Debug::add('routing', 'request', get_object_vars($this));
     }
