@@ -9,7 +9,7 @@ use \App\Auth\Session;
 
 class AuthService extends Service
 {
-    public function signin($email, $password, $force = false)
+    public function signin($email, $password, $remindMe = false)
     {
         $client = new Client();
         $client->getBy('email', '=', $email);
@@ -20,7 +20,7 @@ class AuthService extends Service
         }
 
         // verify pass
-        if (!$force && !$this->verifyHash($client->get('password'), $password)) {
+        if (!$this->verifyHash($client->get('password'), $password)) {
             return false;
         }
 

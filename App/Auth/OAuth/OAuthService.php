@@ -67,10 +67,12 @@ class OAuthService extends Service
         return $jwt;
     }
 
-    public function createSessionToken($clientId)
+    public function createSessionToken($clientId, $remindMe = false)
     {
         $type = OAuthToken::SESSION_TOKEN;
-        $expiry = OAuthToken::getExpiryDate($type);
+
+
+        $expiry = $remindMe ? date('Y-m-d H:i:s', strtotime("+1 years")) : OAuthToken::getExpiryDate($type);
 
         $payload = [
             'token_type' => $type,

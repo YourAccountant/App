@@ -14,6 +14,7 @@
     <form method="POST" id="signin" action="/api/v1/auth/signin">
         <input type="text" name="email" placeholder="email">
         <input type="password" name="password" placeholder="password">
+        <input type="checkbox" name="remindMe">
         <button>submit</button>
     </form>
 

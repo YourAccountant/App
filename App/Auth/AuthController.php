@@ -29,7 +29,12 @@ class AuthController extends Controller
             return $res->json(['result' => false, 'error' => 'email does not exists'], 400);
         }
 
-        $jwt = $this->getService('AuthService.signin', $body->email, $body->password);
+        $jwt = $this->getService(
+            'AuthService.signin',
+            $body->email,
+            $body->password,
+            isset($body->remindMe) && $body->remindMe != null
+        );
 
         // signin
         if (!$jwt) {
