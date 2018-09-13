@@ -17,4 +17,15 @@ class ClientPolicy extends Policy
             $req->params->clientId = $this->getService('AuthService.getClientId');
         }
     }
+
+    public function owned(Request $req, Response $res)
+    {
+        if ((isset($req->params->clientId) && $req->params->clientId != $this->getService('AuthService.getClientId'))
+            || !$this->getService('AuthService.isLoggedIn')
+        ) {
+            return $res->json([
+                'error' => 'Forbidden'
+            ], 403);
+        }
+    }
 }

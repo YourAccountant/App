@@ -36,8 +36,23 @@ Router::get("/signout", "AuthController.signout")->noMiddleware();
  */
 Router::setMiddleware(['OAuthPolicy.authorize']);
 Router::setPrefix("/api/:version/");
+
+// Clients
+
 Router::get("/client/:clientId", "ClientController.getClient")
-    ->setMiddleware(['ClientPolicy.allowMe']);
+    ->setMiddleware(['ClientPolicy.allowMe', 'ClientPolicy.owned']);
+
+// Administrations
+
+Router::get("/administration", "AdministrationController.get");
+
+Router::post("/administration", "AdministrationController.create")
+    ->setMiddleware(['ApiResponse.validJson']);
+
+Router::put("/administration/:administrationId", "AdministrationController.update")
+    ->setMiddleware(['ApiResponse.validJson']);
+
+Router::delete("/administration/:administrationId", "AdministrationController.delete");
 
 /**
  * Fallback

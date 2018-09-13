@@ -5,6 +5,7 @@ namespace Core\Foundation;
 use \Core\Database\Connection;
 use \Core\Database\QueryBuilder;
 use \Core\Support\Str;
+use \Core\Support\Arr;
 
 class Model extends Bootable
 {
@@ -44,18 +45,21 @@ class Model extends Bootable
         return $this;
     }
 
+    public function getBuilder()
+    {
+        return $this->getDependencies('Connection')->builder($this->getTableName());
+    }
+
     public function insert($data)
     {
-        return $this->getDependencies('Connection')
-                ->builder($this->getTableName())
+        return $this->getBuilder()
                 ->insert($data)
                 ->exec();
     }
 
     public function update($id, $data)
     {
-        $this->getDependencies('Connection')
-                ->builder($this->getTableName())
+        $this->getBuilder()
                 ->where('id', '=', $id)
                 ->update($data)
                 ->exec();
@@ -65,8 +69,7 @@ class Model extends Bootable
 
     public function delete($id)
     {
-        return $this->getDependencies('Connection')
-                ->builder($this->getTableName())
+        return $this->getBuilder()
                 ->where('id', '=', $id)
                 ->delete()
                 ->exec();
@@ -74,8 +77,7 @@ class Model extends Bootable
 
     public function getBy($column, $operator, $value)
     {
-        $model = $this->getDependencies('Connection')
-                    ->builder($this->getTableName())
+        $model = $this->getBuilder()
                     ->where($column, $operator, $value)
                     ->exec()
                     ->fetch();
@@ -91,8 +93,7 @@ class Model extends Bootable
 
     public function exists($column, $operator, $value)
     {
-        $count = $this->getDependencies('Connection')
-                    ->builder($this->getTableName())
+        $count = $this->getBuilder()
                     ->columns("COUNT({$column}) as `total`")
                     ->where($column, $operator, $value)
                     ->limit(1)
@@ -113,16 +114,27 @@ class Model extends Bootable
 
     public function getWithoutIgnore()
     {
-        $pool = $this->pool;
+        $pools = Arr::toArray($this->pool);
+
         if (isset($this->ignore)) {
-            foreach ($this->ignore as $column) {
-                if (isset($pool->$column)) {
-                    unset($pool->$column);
+            if (Arr::isAssoc($pools)) {
+                foreach ($this->ignore as $column) {
+                    if (isset($pools->$column)) {
+                        unset($pools->$column);
+                    }
+                }
+            } else {
+                foreach ($pools as $key => $pool) {
+                    foreach ($this->ignore as $column) {
+                        if (isset($pools->{$key}->$column)) {
+                            unset($pools->{$key}->$column);
+                        }
+                    }
                 }
             }
         }
 
-        return $pool;
+        return $pools;
     }
 
     public function __toString()

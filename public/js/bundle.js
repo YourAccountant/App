@@ -1,30 +1,87 @@
 require('../scss/bundle.scss');
 
-$('#signin, #signup, #create-partner').on('submit', function(e) {
+$.put = function(url, data, callback, type){
+
+  if ( $.isFunction(data) ){
+    type = type || callback,
+    callback = data,
+    data = {}
+  }
+
+  return $.ajax({
+    url: url,
+    type: 'PUT',
+    success: callback,
+    data: data,
+    contentType: type
+  });
+}
+
+$.delete = function(url, data, callback, type){
+
+  if ( $.isFunction(data) ){
+    type = type || callback,
+        callback = data,
+        data = {}
+  }
+
+  return $.ajax({
+    url: url,
+    type: 'DELETE',
+    success: callback,
+    data: data,
+    contentType: type
+  });
+}
+
+$('#signin, #signup, #create-partner').submit(function(e) {
     e.preventDefault();
 
-    let data = $(this).serializeArray()
-
     let json = {}
-    data.forEach(d => {
+    $(this).serializeArray().forEach(d => {
         json[d.name] = d.value;
     })
 
-    let url = $(this).attr('action');
-
-    $.post(url, JSON.stringify(json), d => {
-        console.log('success', d);
-    })
-    .done(d => {
-        console.log('done', d);
-    })
-    .fail(d => {
-        console.log('success', d);
-    })
+    $.post($(this).attr('action'), JSON.stringify(json))
 });
 
-$('#get').on('click', function (e) {
-    $.get('/api/v1/client/me', d => {
-        console.log(d);
+$('#get-me').click(_ => {
+    $.get('/api/v1/client/me')
+})
+
+$('#get-administrations').click(_ => {
+    $.get('/api/v1/administration')
+})
+
+$("#create-administration").submit(function(e) {
+    e.preventDefault()
+
+    let json = {}
+    $(this).serializeArray().forEach(d => {
+        json[d.name] = d.value;
     })
+
+    $.post($(this).attr('action'), JSON.stringify(json))
+})
+
+$('#update-administration').submit(function (e) {
+    e.preventDefault()
+
+    let json = {}
+    $(this).serializeArray().forEach(d => {
+        json[d.name] = d.value;
+    })
+
+    $.put($(this).attr('action') + '/' + json.id, JSON.stringify(json))
+})
+
+$('#delete-administration').submit(function (e) {
+    e.preventDefault()
+
+    let json = {}
+    $(this).serializeArray().forEach(d => {
+        json[d.name] = d.value;
+    })
+
+    $.delete($(this).attr('action') + '/' + json.id)
 })

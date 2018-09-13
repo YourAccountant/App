@@ -28,16 +28,33 @@
     <a href="/api/v1/auth/signout" id="signout">signout</a>
     <br><br>
     <p>get user</p>
-    <button id="get">get</button>
+    <button id="get-me">get me</button>
     <br>
     <br>
     <hr>
     <br>
 
-    <p>create partner</p>
-    <form id="create-partner" method="POST" action="/api/v1/oauth/partner">
+    <p>Administration</p>
+    <button id="get-administrations">get administration</button>
+
+    <p>create</p>
+    <form id="create-administration" action="/api/v1/administration">
         <input type="text" name="name" placeholder="name">
-        <input type="text" name="desc" placeholder="desc">
+        <input type="text" name="code" placeholder="code">
+        <button>submit</button>
+    </form>
+
+    <p>Update</p>
+    <form id="update-administration" action="/api/v1/administration">
+        <input type="text" name="id" placeholder="id">
+        <input type="text" name="name" placeholder="name">
+        <input type="text" name="code" placeholder="code">
+        <button>submit</button>
+    </form>
+
+    <p>delete</p>
+    <form id="delete-administration" action="/api/v1/administration">
+        <input type="text" name="id">
         <button>submit</button>
     </form>
 
