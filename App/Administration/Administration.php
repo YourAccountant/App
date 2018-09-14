@@ -10,11 +10,14 @@ class Administration extends Model
 
     public function getByClient($clientId, $orderBy = ' created_at DESC ')
     {
-        return $this->getBuilder()
+        $result = $this->getBuilder()
             ->where('client_id', '=', $clientId)
             ->orderBy($orderBy)
             ->exec()
             ->fetchAll();
+
+        $this->setPool($result);
+        return $this;
     }
 
     public function administrationCodeExists($code)

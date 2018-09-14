@@ -43,17 +43,32 @@ Router::get("/client/:clientId", "ClientController.getClient")
     ->setMiddleware(['ClientPolicy.allowMe', 'ClientPolicy.owned']);
 
 // Administrations
-
 Router::get("/administration", "AdministrationController.get");
-Router::get("/administration/:administrationId", "AdministrationController.getOne");
+
+Router::get("/administration/:administrationId", "AdministrationController.getOne")
+    ->setMiddleware('AdministrationPolicy.isOwned');
 
 Router::post("/administration", "AdministrationController.create")
     ->setMiddleware(['ApiResponse.validJson']);
 
 Router::put("/administration/:administrationId", "AdministrationController.update")
-    ->setMiddleware(['ApiResponse.validJson']);
+    ->setMiddleware(['ApiResponse.validJson', 'AdministrationPolicy.isOwned']);
 
-Router::delete("/administration/:administrationId", "AdministrationController.delete");
+Router::delete("/administration/:administrationId", "AdministrationController.delete")
+    ->setMiddleware('AdministrationPolicy.isOwned');
+
+// Accounts
+Router::get("/administration/:administrationId/account", "AccountController.get")
+    ->setMiddleware('AdministrationPolicy.isOwned');
+
+Router::post("/administration/:administrationId/account", "AccountController.create")
+    ->setMiddleware('AdministrationPolicy.isOwned');
+
+Router::put("/administration/:administrationId/account/:accountId", "AccountController.edit")
+    ->setMiddleware('AdministrationPolicy.isOwned');
+
+Router::delete("/administration/:administrationId/account/:accountId", "AccountController.delete")
+    ->setMiddleware('AdministrationPolicy.isOwned');
 
 /**
  * Fallback

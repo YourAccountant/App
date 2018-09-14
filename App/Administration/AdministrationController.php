@@ -11,8 +11,9 @@ class AdministrationController extends Controller
     public function get(Request $req, Response $res)
     {
         $admin = new Administration();
-        $administrations = $admin->getByClient($this->getService('AuthService.getClientId'));
-        return $res->json($administrations, 200);
+        $admin->getByClient($this->getService('AuthService.getClientId'));
+
+        return $res->json($admin, 200);
     }
 
     public function getOne(Request $req, Response $res)
@@ -20,20 +21,7 @@ class AdministrationController extends Controller
         $admin = new Administration();
         $clientId = $this->getService("AuthService.getClientId");
 
-        if (!$this->isset($req->params, 'administrationId')) {
-            return $res->json([
-                'error' => 'missing id'
-            ], 400);
-        }
-
         $id = $req->params->administrationId;
-
-        if (!$admin->isOwned($id)) {
-            return $res->json([
-                "error" => "forbidden"
-            ], 401);
-        }
-
         $admin->getBy('id', '=', $id);
 
         return $res->json($admin, 200);
@@ -81,19 +69,7 @@ class AdministrationController extends Controller
         $clientId = $this->getService("AuthService.getClientId");
         $admin = new Administration();
 
-        if (!$this->isset($req->params, 'administrationId')) {
-            return $res->json([
-                'error' => 'missing id'
-            ], 400);
-        }
-
         $id = $req->params->administrationId;
-
-        if (!$admin->isOwned($id)) {
-            return $res->json([
-                "error" => "forbidden"
-            ], 401);
-        }
 
         $update = [];
 
@@ -117,19 +93,7 @@ class AdministrationController extends Controller
         $clientId = $this->getService("AuthService.getClientId");
         $admin = new Administration();
 
-        if (!$this->isset($req->params, 'administrationId')) {
-            return $res->json([
-                'error' => 'missing id'
-            ], 400);
-        }
-
         $id = $req->params->administrationId;
-
-        if (!$admin->isOwned($id)) {
-            return $res->json([
-                "error" => "forbidden"
-            ], 401);
-        }
 
         $admin->delete($id);
 
