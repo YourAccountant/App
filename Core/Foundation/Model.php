@@ -45,6 +45,11 @@ class Model extends Bootable
         return $this;
     }
 
+    protected function setPool($pool) {
+        $this->pool = $pool;
+        return $this;
+    }
+
     public function getBuilder()
     {
         return $this->getDependencies('Connection')->builder($this->getTableName());

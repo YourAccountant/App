@@ -23,4 +23,33 @@ class Arr
     {
         return json_decode(json_encode($obj), true);
     }
+
+    public static function issetArr($body, $keys)
+    {
+        $result = true;
+        foreach($keys as $key) {
+            if (!self::isset($body, $key)) {
+                $result = false;
+                break;
+            }
+        }
+
+        return $result;
+    }
+
+    public static function isset($body, $key)
+    {
+        if (is_array($key)) {
+            return self::issetArr($body, $key);
+        }
+
+        $result = true;
+        if (is_array($body)) {
+            return isset($body[$key]) && $body[$key] != null;
+        } elseif (is_object($body)) {
+            return isset($body->$key) && $body->$key != null;
+        }
+
+        return $result;
+    }
 }
