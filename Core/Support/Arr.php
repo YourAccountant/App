@@ -52,4 +52,32 @@ class Arr
 
         return $result;
     }
+
+    public static function push($arr, $key, $value)
+    {
+        if (is_object($arr)) {
+            $arr->$key = $value;
+        } elseif (is_array($arr)) {
+            $arr[$key] = $value;
+        }
+
+        return $arr;
+    }
+
+    public static function addIfSet($result, $body, $keys)
+    {
+        foreach ($keys as $key) {
+            if (is_array($body)) {
+                if (isset($body[$key])) {
+                    $result = self::push($result, $key, $body[$key]);
+                }
+            } else {
+                if (isset($body->$key)) {
+                    $result = self::push($result, $key, $body->$key);
+                }
+            }
+        }
+
+        return $result;
+    }
 }
