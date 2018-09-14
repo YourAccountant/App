@@ -31,10 +31,6 @@ $sessions->add('expiry')->timestamp();
 $sessions->add('created_at')->dateCreate();
 $sessions->add('updated_at')->dateUpdate();
 
-// payments
-$payments = Migration::table('payments');
-$payments->add('id')->id();
-
 // oauth clients
 $oauthPartner = Migration::table('oauth_partners');
 $oauthPartner->add('id')->id();
@@ -67,6 +63,7 @@ $administrations->add('updated_at')->dateUpdate();
 // permissions
 $permissions = Migration::table('permissions');
 $permissions->add('id')->id();
+$permissions->add('client_id')->id(false)->relation('clients', 'id');
 $permissions->add('parent_type')->id(false)->index();
 $permissions->add('parent_id')->id(false)->index();
 $permissions->add('key')->string();
@@ -93,8 +90,13 @@ $addresses->add('id')->id();
 $accounts = Migration::table('accounts');
 $accounts->add('id')->id();
 $accounts->add('administration_id')->id(false)->relation('administrations', 'id');
-$accounts->add('name')->string();
-$accounts->add('code')->int(11);
+$accounts->add('desc')->string(40);
+$accounts->add('code')->int(2);
+$accounts->add('type')->string(40);
+$accounts->add('vat')->int(1);
+$accounts->add('is_balance')->bool(true);
+$accounts->add('is_credit')->bool(true);
+$accounts->add('is_active')->bool(true);
 $accounts->add('created_at')->dateCreate();
 $accounts->add('updated_at')->dateUpdate();
 
@@ -122,3 +124,7 @@ $lines->add('credit')->int(11)->unsigned();
 $lines->add('debit')->int(11)->unsigned();
 $lines->add('created_at')->dateCreate();
 $lines->add('updated_at')->dateUpdate();
+
+// payments
+$payments = Migration::table('payments');
+$payments->add('id')->id();

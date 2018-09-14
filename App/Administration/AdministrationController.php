@@ -15,6 +15,30 @@ class AdministrationController extends Controller
         return $res->json($administrations, 200);
     }
 
+    public function getOne(Request $req, Response $res)
+    {
+        $admin = new Administration();
+        $clientId = $this->getService("AuthService.getClientId");
+
+        if (!$this->isset($req->params, 'administrationId')) {
+            return $res->json([
+                'error' => 'missing id'
+            ], 400);
+        }
+
+        $id = $req->params->administrationId;
+
+        if (!$admin->isOwned($id)) {
+            return $res->json([
+                "error" => "forbidden"
+            ], 401);
+        }
+
+        $admin->getBy('id', '=', $id);
+
+        return $res->json($admin, 200);
+    }
+
     public function create(Request $req, Response $res)
     {
         $body = $req->json();

@@ -19,7 +19,7 @@ module.exports = {
                 ]
             },
             {
-                test: /\.html$/,
+                test: /\.html|\.php$/,
                 use: [
                     {
                         loader: 'html-loader',

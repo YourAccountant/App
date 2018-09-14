@@ -45,6 +45,7 @@ Router::get("/client/:clientId", "ClientController.getClient")
 // Administrations
 
 Router::get("/administration", "AdministrationController.get");
+Router::get("/administration/:administrationId", "AdministrationController.getOne");
 
 Router::post("/administration", "AdministrationController.create")
     ->setMiddleware(['ApiResponse.validJson']);

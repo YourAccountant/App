@@ -8,58 +8,8 @@
     <title>Document</title>
 </head>
 <body>
-
-    <!-- <div id="app"></div> -->
-    <p>signin</p>
-    <form method="POST" id="signin" action="/api/v1/auth/signin">
-        <input type="text" name="email" placeholder="email">
-        <input type="password" name="password" placeholder="password">
-        <input type="checkbox" name="remindMe">
-        <button>submit</button>
-    </form>
-
-    <p>signup</p>
-    <form method="POST" id="signup" action="/api/v1/auth/signup">
-        <input type="text" name="email" placeholder="email">
-        <input type="password" name="password" placeholder="password">
-        <button>submit</button>
-    </form>
-
-    <a href="/api/v1/auth/signout" id="signout">signout</a>
-    <br><br>
-    <p>get user</p>
-    <button id="get-me">get me</button>
-    <br>
-    <br>
-    <hr>
-    <br>
-
-    <p>Administration</p>
-    <button id="get-administrations">get administration</button>
-
-    <p>create</p>
-    <form id="create-administration" action="/api/v1/administration">
-        <input type="text" name="name" placeholder="name">
-        <input type="text" name="code" placeholder="code">
-        <button>submit</button>
-    </form>
-
-    <p>Update</p>
-    <form id="update-administration" action="/api/v1/administration">
-        <input type="text" name="id" placeholder="id">
-        <input type="text" name="name" placeholder="name">
-        <input type="text" name="code" placeholder="code">
-        <button>submit</button>
-    </form>
-
-    <p>delete</p>
-    <form id="delete-administration" action="/api/v1/administration">
-        <input type="text" name="id">
-        <button>submit</button>
-    </form>
-
+    <div id="app"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="/dist/bundle.dist.js"></script>
-
 </body>
 </html>
