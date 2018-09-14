@@ -5,6 +5,7 @@ namespace App\Administration;
 use \Core\Foundation\Controller;
 use \Core\Router\Request;
 use \Core\Router\Response;
+use \Core\Support\Arr;
 
 class AdministrationController extends Controller
 {
@@ -31,13 +32,9 @@ class AdministrationController extends Controller
     {
         $body = $req->json();
 
-        if (!$this->isset($body, 'code')) {
+        if (!$this->isset($body, ['code', 'name'])) {
             return $res->json([
-                "error" => "missing code"
-            ], 400);
-        } elseif (!$this->isset($body, 'name')) {
-            return $res->json([
-                "error" => "missing name"
+                'error' => 'missing required fields'
             ], 400);
         }
 
@@ -71,15 +68,7 @@ class AdministrationController extends Controller
 
         $id = $req->params->administrationId;
 
-        $update = [];
-
-        if ($this->isset($body, 'code')) {
-            $update['code'] = $body->code;
-        }
-
-        if ($this->isset($body, 'name')) {
-            $update['name'] = $body->name;
-        }
+        $update = Arr::addIfSet([], $body, ['code', 'name']);
 
         $admin->update($id, $update);
 
