@@ -62,14 +62,6 @@ class AccountController extends Controller
             'vat' => $body->vat
         ];
 
-        if (isset($body->isBalance)) {
-            $data['is_balance'] = $body->isBalance ? "1" : "0";
-        }
-
-        if (isset($body->isCredit)) {
-            $data['is_credit'] = $body->isCredit ? "1" : "0";
-        }
-
         $account->insert($data);
 
         return $res->json([
@@ -89,22 +81,27 @@ class AccountController extends Controller
 
         $accountId = $req->params->accountId;
 
-        $data = Arr::addIfSet([], $body, ['code', 'desc', 'type', 'vat']);
-
-        if (isset($body->isBalance)) {
-            $data['is_balance'] = $body->isBalance ? "1" : "0";
+        $data = [];
+        if ($this->isset($body, 'code')) {
+            $data['code'] = $body->code;
         }
 
-        if (isset($body->isCredit)) {
-            $data['is_credit'] = $body->isCredit ? "1" : "0";
+        if ($this->isset($body, 'desc')) {
+            $data['desc'] = $body->code;
         }
 
-        if (isset($body->isActive)) {
-            $data['is_active'] = $body->isActive ? "1" : "0";
+        if ($this->isset($body, 'type')) {
+            $data['type'] = $body->code;
+        }
+
+        if ($this->isset($body, 'vat')) {
+            $data['vat'] = $body->code;
         }
 
         $account = new Account();
-        $account->update($accountId, $data);
+        if (!empty($data)) {
+            $account->update($accountId, $data);
+        }
 
         return $res->json([
             'result' => true

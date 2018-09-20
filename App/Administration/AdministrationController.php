@@ -68,9 +68,18 @@ class AdministrationController extends Controller
 
         $id = $req->params->administrationId;
 
-        $update = Arr::addIfSet([], $body, ['code', 'name']);
+        $data = [];
+        if ($this->isset($body, 'code')) {
+            $data['code'] = $body->code;
+        }
 
-        $admin->update($id, $update);
+        if ($this->isset($body, 'name')) {
+            $data['name'] = $body->code;
+        }
+
+        if (!empty($data)) {
+            $admin->update($id, $data);
+        }
 
         return $res->json([
             'result' => true
