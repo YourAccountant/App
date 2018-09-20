@@ -74,7 +74,7 @@ class AdministrationController extends Controller
         }
 
         if ($this->isset($body, 'name')) {
-            $data['name'] = $body->code;
+            $data['name'] = $body->name;
         }
 
         if (!empty($data)) {

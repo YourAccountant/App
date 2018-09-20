@@ -87,15 +87,15 @@ class AccountController extends Controller
         }
 
         if ($this->isset($body, 'desc')) {
-            $data['desc'] = $body->code;
+            $data['desc'] = $body->desc;
         }
 
         if ($this->isset($body, 'type')) {
-            $data['type'] = $body->code;
+            $data['type'] = $body->type;
         }
 
         if ($this->isset($body, 'vat')) {
-            $data['vat'] = $body->code;
+            $data['vat'] = $body->vat;
         }
 
         $account = new Account();

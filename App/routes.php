@@ -65,10 +65,10 @@ Router::get("/administration/:administrationId/account/:accountId", "AccountCont
     ->setMiddleware('AdministrationPolicy.isOwned');
 
 Router::post("/administration/:administrationId/account", "AccountController.create")
-    ->setMiddleware('ApiResponse.validJson', 'AdministrationPolicy.isOwned');
+    ->setMiddleware(['ApiResponse.validJson', 'AdministrationPolicy.isOwned']);
 
 Router::put("/administration/:administrationId/account/:accountId", "AccountController.update")
-    ->setMiddleware('ApiResponse.validJson', 'AdministrationPolicy.isOwned');
+    ->setMiddleware(['ApiResponse.validJson', 'AdministrationPolicy.isOwned']);
 
 Router::delete("/administration/:administrationId/account/:accountId", "AccountController.delete")
     ->setMiddleware('AdministrationPolicy.isOwned');
