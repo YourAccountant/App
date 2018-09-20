@@ -40,6 +40,18 @@ class Column
         }
     }
 
+    public function type($type)
+    {
+        $this->type = strtoupper($type);
+        return $this;
+    }
+
+    public function price()
+    {
+        $this->type('BIGINT');
+        return $this;
+    }
+
     public function default($value)
     {
         $this->default = $value;

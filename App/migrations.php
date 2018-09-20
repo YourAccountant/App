@@ -93,9 +93,7 @@ $accounts->add('administration_id')->id(false)->relation('administrations', 'id'
 $accounts->add('desc')->string(40);
 $accounts->add('code')->int(2);
 $accounts->add('type')->string(40);
-$accounts->add('vat')->int(1);
-$accounts->add('is_balance')->bool(true);
-$accounts->add('is_credit')->bool(true);
+$accounts->add('vat')->type('TINYINT');
 $accounts->add('is_active')->bool(true);
 $accounts->add('created_at')->dateCreate();
 $accounts->add('updated_at')->dateUpdate();
@@ -104,6 +102,7 @@ $accounts->add('updated_at')->dateUpdate();
 $journals = Migration::table('journals');
 $journals->add('id')->id();
 $journals->add('administration_id')->id(false)->relation('administrations', 'id');
+$journals->add('total')->price()->nullable();
 $journals->add('created_at')->dateCreate();
 $journals->add('updated_at')->dateUpdate();
 
@@ -111,6 +110,7 @@ $journals->add('updated_at')->dateUpdate();
 $balances = Migration::table('balances');
 $balances->add('id')->id();
 $balances->add('administration_id')->id(false)->relation('administrations', 'id');
+$balances->add('total')->price()->nullable();
 $balances->add('created_at')->dateCreate();
 $balances->add('updated_at')->dateUpdate();
 
@@ -120,8 +120,8 @@ $lines->add('id')->id();
 $lines->add('account_id')->id(false)->relation('accounts', 'id');
 $lines->add('parent_type')->string()->index();
 $lines->add('parent_id')->id(false);
-$lines->add('credit')->int(11)->unsigned();
-$lines->add('debit')->int(11)->unsigned();
+$lines->add('total')->price()->nullable();
+$lines->add('vat')->type('TINYINT');
 $lines->add('created_at')->dateCreate();
 $lines->add('updated_at')->dateUpdate();
 
