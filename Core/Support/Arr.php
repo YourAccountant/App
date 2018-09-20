@@ -43,14 +43,13 @@ class Arr
             return self::issetArr($body, $key);
         }
 
-        $result = true;
         if (is_array($body)) {
             return isset($body[$key]) && $body[$key] != null;
         } elseif (is_object($body)) {
             return isset($body->$key) && $body->$key != null;
         }
 
-        return $result;
+        return false;
     }
 
     public static function push($arr, $key, $value)
