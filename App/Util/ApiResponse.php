@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Policy;
+namespace App\Util;
 
 use \Core\Foundation\Policy;
 use \Core\Router\Request;
