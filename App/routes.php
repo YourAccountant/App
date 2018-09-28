@@ -73,6 +73,21 @@ Router::put("/administration/:administrationId/account/:accountId", "AccountCont
 Router::delete("/administration/:administrationId/account/:accountId", "AccountController.delete")
     ->setMiddleware('AdministrationPolicy.isOwned');
 
+// Journals
+Router::get("/administration/:administrationId/journal", "JournalController.get")
+    ->setMiddleware('AdministrationPolicy.isOwned');
+
+Router::get("/administration/:administrationId/journal/:journalId", "JournalController.getOne")
+    ->setMiddleware('AdministrationPolicy.isOwned');
+
+Router::post("/administration/:administrationId/journal", "JournalController.create")
+    ->setMiddleware(['ApiResponse.validJson', 'AdministrationPolicy.isOwned']);
+
+Router::put("/administration/:administrationId/journal/:journalId", "JournalController.update")
+    ->setMiddleware(['ApiResponse.validJson', 'AdministrationPolicy.isOwned']);
+
+Router::delete("/administration/:administrationId/journal/:journalId", "JournalController.delete")
+    ->setMiddleware('AdministrationPolicy.isOwned');
 /**
  * Fallback
  */
