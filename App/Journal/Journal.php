@@ -2,7 +2,7 @@
 
 namespace App\Journal;
 
-use \Core\Foudation\Model;
+use \Core\Foundation\Model;
 use \App\Util\Price;
 use \App\Account\Account;
 
