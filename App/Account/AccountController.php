@@ -114,6 +114,6 @@ class AccountController extends Controller
 
         return $res->json([
             'result' => true
-        ],200);
+        ], 200);
     }
 }

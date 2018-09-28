@@ -45,7 +45,8 @@ class Model extends Bootable
         return $this;
     }
 
-    protected function setPool($pool) {
+    protected function setPool($pool)
+    {
         $this->pool = $pool;
         return $this;
     }

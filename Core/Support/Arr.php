@@ -27,7 +27,7 @@ class Arr
     public static function issetArr($body, $keys)
     {
         $result = true;
-        foreach($keys as $key) {
+        foreach ($keys as $key) {
             if (!self::isset($body, $key)) {
                 $result = false;
                 break;
