@@ -6,6 +6,7 @@ use \Core\Foundation\Controller;
 use \Core\Router\Request;
 use \Core\Router\Response;
 use \App\Util\Price;
+use \App\Util\DateUtil;
 use \Core\Debug\Debug;
 use \Core\Support\Obj;
 
@@ -34,6 +35,20 @@ class JournalController extends Controller
         $result = Obj::toArray($result);
 
         return $res->json($result, 200);
+    }
+
+    public function getByPeriod(Request $req, Response $res)
+    {
+        if (!DateUtil::isValid($req->params->period)) {
+            return $res->json([
+                'error' => 'invalid period'
+            ], 400);
+        }
+
+        $journal = new Journal();
+        $journals = $journal->getByPeriod($req->params->administrationId, 'journal', $req->params->period);
+
+        return $res->json($journals, 200);
     }
 
     public function create(Request $req, Response $res)

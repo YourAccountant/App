@@ -16,6 +16,8 @@ class Booking extends Model
             ->exec()
             ->fetch();
 
+        $booking = $this->prepare($booking);
+
         $entry = new BookingEntry();
 
         $booking->entries = $entry->getByParent($id);
@@ -35,8 +37,40 @@ class Booking extends Model
         $result = [];
 
         foreach ($bookings as $booking) {
+            $booking = $this->prepare($booking);
+
             $entry = new BookingEntry();
             $booking->entries = $entry->getByParent($booking->id);
+            $result[] = $booking;
+        }
+
+        return $result;
+    }
+
+    public function prepare($booking)
+    {
+        if ($this->isset($booking, 'period')) {
+            $booking->period = date('Y-m', strtotime($booking->period));
+        }
+
+        return $booking;
+    }
+
+    public function getByPeriod($adminId, $type, $period)
+    {
+        $bookings = $this->getBuilder()
+            ->where('administrationId', '=', $adminId)
+            ->and('type', '=', $type)
+            ->and('period', '=', "{$period}-01")
+            ->exec()
+            ->fetchAll();
+
+        $bookingEntry = new BookingEntry();
+
+        $result = [];
+        foreach ($bookings as $booking) {
+            $booking = $this->prepare($booking);
+            $booking->entries = $bookingEntry->getByParent($booking->id);
             $result[] = $booking;
         }
 

@@ -74,6 +74,9 @@ Router::delete("/administration/:administrationId/account/:accountId", "AccountC
     ->setMiddleware('AdministrationPolicy.isOwned');
 
 // Journals
+Router::get("/administration/:administrationId/journal/period/:period", "JournalController.getByPeriod")
+    ->setMiddleware('AdministrationPolicy.isOwned');
+
 Router::get("/administration/:administrationId/journal", "JournalController.get")
     ->setMiddleware('AdministrationPolicy.isOwned');
 

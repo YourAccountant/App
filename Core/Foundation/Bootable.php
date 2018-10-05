@@ -62,6 +62,11 @@ class Bootable
         return $dependencies;
     }
 
+    public function isset($body, $key)
+    {
+        return \Core\Support\Arr::isset($body, $key);
+    }
+
     protected function printLog()
     {
         Debug::print();
