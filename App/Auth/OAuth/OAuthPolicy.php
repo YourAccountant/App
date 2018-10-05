@@ -56,7 +56,7 @@ class OAuthPolicy extends Policy
 
         // set session client
         $client = new Client();
-        $client->set('id', $payload->client_id);
+        $client->set('id', $payload->clientId);
 
         $this->getService("AuthService.setAuthClient", $client);
     }

@@ -6,7 +6,7 @@ use \Core\Foundation\Model;
 
 class OAuthPartner extends Model
 {
-    protected $table = 'oauth_partners';
+    protected $table = 'oauthPartners';
 
     public function generateSlug($name)
     {
@@ -31,7 +31,7 @@ class OAuthPartner extends Model
         $data['slug'] = $this->generateSlug($data['name']);
         $data['secret'] = $this->generateSecret();
         return $this->insert([
-            'client_id' => $clientId,
+            'clientId' => $clientId,
             'name' => $data['name'],
             'slug' => $data['slug'],
             'desc' => $data['desc'] ?? '',

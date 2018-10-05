@@ -47,7 +47,7 @@ class OAuthController extends Controller
 
     public function authorize(Request $req, Response $res)
     {
-        $refreshToken = $req->json()->refresh_token;
+        $refreshToken = $req->json()->refreshToken;
 
         if ($refreshToken == null) {
             return $res->json(['error' => 'Not authorized'], 401);
@@ -60,21 +60,21 @@ class OAuthController extends Controller
             return $res->json(['error' => 'token does not exist'], 400);
         }
 
-        $tokenId = $token->create('bearer', $token->get('client_id'), $token->get('oauth_partner_id'));
+        $tokenId = $token->create('bearer', $token->get('clientId'), $token->get('oauthPartnerId'));
 
         $bearerToken = new OAuthToken();
         $bearerToken->getBy('id', '=', $tokenId);
-        return $res->json(['action' => 'authorize', 'token' => $bearerToken->get('token'), 'expiry_date' => $bearerToken->get('expiry')]);
+        return $res->json(['action' => 'authorize', 'token' => $bearerToken->get('token'), 'expiryDate' => $bearerToken->get('expiry')]);
     }
 
     public function refresh(Request $req, Response $res)
     {
-        $payload = $this->getService("OAuthService.refreshAccessTokeToken", $req->json()->refresh_token);
+        $payload = $this->getService("OAuthService.refreshAccessTokeToken", $req->json()->refreshToken);
 
         $res->json([
             'action' => 'refresh',
-            'token_type' => $payload['token_type'],
-            'token' => $payload['access_token'],
+            'tokenType' => $payload['tokenType'],
+            'token' => $payload['accessToken'],
             'expiry' => $payload['expiry']
         ], 200);
     }

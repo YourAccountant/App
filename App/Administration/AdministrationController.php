@@ -49,7 +49,7 @@ class AdministrationController extends Controller
         }
 
         $admin->insert([
-            "client_id" => $clientId,
+            "clientId" => $clientId,
             "code" => $body->code,
             "name" => $body->name
         ]);

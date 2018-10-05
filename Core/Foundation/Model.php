@@ -112,7 +112,7 @@ class Model extends Bootable
     public function getTableName()
     {
         if ($this->table == null) {
-            $this->table = Str::camelCaseToSnakeCase(static::class) . 's';
+            $this->table = lcfirst(static::class) . 's';
         }
 
         return $this->table;

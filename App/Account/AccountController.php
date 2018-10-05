@@ -55,7 +55,7 @@ class AccountController extends Controller
         }
 
         $data = [
-            'administration_id' => $adminId,
+            'administrationId' => $adminId,
             'code' => $body->code,
             'desc' => $body->desc,
             'type' => $body->type,

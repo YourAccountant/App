@@ -19,7 +19,7 @@ class OAuthToken extends Model
     // Session token for client related to phpsessid
     const SESSION_TOKEN = 'session_token';
 
-    protected $table = 'oauth_tokens';
+    protected $table = 'oauthTokens';
 
     protected $daysAfterExpiry = 1;
 
@@ -81,9 +81,9 @@ class OAuthToken extends Model
     {
         return $this->getDependencies('Connection')
             ->builder($this->table)
-            ->where('token_type', '=', $type)
-            ->and('client_id', '=', $clientId)
-            ->and('oauth_partner_id', '=', $partnerId)
+            ->where('tokenType', '=', $type)
+            ->and('clientId', '=', $clientId)
+            ->and('oauthPartnerId', '=', $partnerId)
             ->limit(1)
             ->exec()
             ->fetch();

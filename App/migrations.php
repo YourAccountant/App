@@ -18,114 +18,110 @@ $clients->add('email')->string(255)->unique();
 $clients->add('password')->string(255);
 $clients->add('subscription')->string(25)->default('none');
 $clients->add('role')->string(25)->default('client');
-$clients->add('created_at')->dateCreate();
-$clients->add('updated_at')->dateUpdate();
+$clients->add('createdAt')->dateCreate();
+$clients->add('updatedAt')->dateUpdate();
 
 // login sessions
 $sessions = Migration::table('sessions');
 $sessions->add('id')->id();
-$sessions->add('client_id')->id(false)->relation('clients', 'id');
+$sessions->add('clientId')->id(false)->relation('clients', 'id');
 $sessions->add('ip')->string(255);
 $sessions->add('authorization')->text();
 $sessions->add('expiry')->timestamp();
-$sessions->add('created_at')->dateCreate();
-$sessions->add('updated_at')->dateUpdate();
+$sessions->add('createdAt')->dateCreate();
+$sessions->add('updatedAt')->dateUpdate();
 
 // oauth clients
-$oauthPartner = Migration::table('oauth_partners');
+$oauthPartner = Migration::table('oauthPartners');
 $oauthPartner->add('id')->id();
-$oauthPartner->add('client_id')->id(false)->relation('clients', 'id');
+$oauthPartner->add('clientId')->id(false)->relation('clients', 'id');
 $oauthPartner->add('slug')->string(255)->unique();
 $oauthPartner->add('name')->string(255);
 $oauthPartner->add('secret')->string(25)->unique();
 $oauthPartner->add('desc')->text()->nullable();
-$oauthPartner->add('redirect_url')->string(255)->nullable();
+$oauthPartner->add('redirectUrl')->string(255)->nullable();
 
-$oauthTokens = Migration::table('oauth_tokens');
+// oauth tokens
+$oauthTokens = Migration::table('oauthTokens');
 $oauthTokens->add('id')->id();
-$oauthTokens->add('client_id')->id(false)->relation('clients', 'id');
-$oauthTokens->add('oauth_partner_id')->id(false)->relation('oauth_partners', 'id');
-$oauthTokens->add('token_type')->string(255);
+$oauthTokens->add('clientId')->id(false)->relation('clients', 'id');
+$oauthTokens->add('oauthPartnerId')->id(false)->relation('oauthPartners', 'id');
+$oauthTokens->add('tokenType')->string(255);
 $oauthTokens->add('token')->text();
 $oauthTokens->add('expiry')->timestamp();
-$oauthTokens->add('created_at')->dateCreate();
-$oauthTokens->add('updated_at')->dateUpdate();
+$oauthTokens->add('createdAt')->dateCreate();
+$oauthTokens->add('updatedAt')->dateUpdate();
 
 // administrations
 $administrations = Migration::table('administrations');
 $administrations->add('id')->id();
-$administrations->add('client_id')->id(false)->relation('clients', 'id');
+$administrations->add('clientId')->id(false)->relation('clients', 'id');
 $administrations->add('code')->int(11);
 $administrations->add('name')->string();
-$administrations->add('created_at')->dateCreate();
-$administrations->add('updated_at')->dateUpdate();
+$administrations->add('createdAt')->dateCreate();
+$administrations->add('updatedAt')->dateUpdate();
 
 // permissions
 $permissions = Migration::table('permissions');
 $permissions->add('id')->id();
-$permissions->add('client_id')->id(false)->relation('clients', 'id');
-$permissions->add('parent_type')->id(false)->index();
-$permissions->add('parent_id')->id(false)->index();
+$permissions->add('clientId')->id(false)->relation('clients', 'id');
+$permissions->add('parentType')->id(false)->index();
+$permissions->add('parentId')->id(false)->index();
 $permissions->add('key')->string();
 $permissions->add('value')->string();
-$permissions->add('created_at')->dateCreate();
-$permissions->add('updated_at')->dateUpdate();
+$permissions->add('createdAt')->dateCreate();
+$permissions->add('updatedAt')->dateUpdate();
 
-/*
-for later
-*/
+// invoices
 $invoices = Migration::table('invoices');
 $invoices->add('id')->id();
 
-$invoiceLine = Migration::table('invoice_lines');
+// invoice lines
+$invoiceLine = Migration::table('invoiceLines');
 $invoiceLine->add('id')->id();
 
+// customers
 $customers = Migration::table('customers');
 $customers->add('id')->id();
 
+// addresses
 $addresses = Migration::table('addresses');
 $addresses->add('id')->id();
 
 // accounts
 $accounts = Migration::table('accounts');
 $accounts->add('id')->id();
-$accounts->add('administration_id')->id(false)->relation('administrations', 'id');
+$accounts->add('administrationId')->id(false)->relation('administrations', 'id');
 $accounts->add('desc')->string(40);
 $accounts->add('code')->int(2);
 $accounts->add('type')->string(40);
 $accounts->add('vat')->type('TINYINT');
-$accounts->add('is_active')->bool(true);
-$accounts->add('created_at')->dateCreate();
-$accounts->add('updated_at')->dateUpdate();
+$accounts->add('isActive')->bool(true);
+$accounts->add('createdAt')->dateCreate();
+$accounts->add('updatedAt')->dateUpdate();
 
-// journals
-$journals = Migration::table('journals');
-$journals->add('id')->id();
-$journals->add('administration_id')->id(false)->relation('administrations', 'id');
-$journals->add('account_id')->id(false)->relation('accounts', 'id');
-$journals->add('desc')->string(255)->nullable();
-$journals->add('created_at')->dateCreate();
-$journals->add('updated_at')->dateUpdate();
-
-// balances
-$balances = Migration::table('balances');
-$balances->add('id')->id();
-$balances->add('administration_id')->id(false)->relation('administrations', 'id');
-$balances->add('account_id')->id(false)->relation('accounts', 'id');
-$balances->add('created_at')->dateCreate();
-$balances->add('updated_at')->dateUpdate();
+// bookings
+$bookings = Migration::table('bookings');
+$bookings->add('id')->id();
+$bookings->add('administrationId')->id(false)->relation('administrations', 'id');
+$bookings->add('accountId')->id(false)->relation('accounts', 'id');
+$bookings->add('type')->string(255)->index();
+$bookings->add('desc')->string(255)->nullable();
+$bookings->add('period')->date()->index();
+$bookings->add('openingBalance')->price();
+$bookings->add('reference')->id(false)->index()->nullable();
+$bookings->add('createdAt')->dateCreate();
+$bookings->add('updatedAt')->dateUpdate();
 
 // lines
 $lines = Migration::table('lines');
 $lines->add('id')->id();
-$lines->add('account_id')->id(false)->relation('accounts', 'id');
-$lines->add('parent_type')->string()->index();
-$lines->add('parent_id')->id(false)->index();
+$lines->add('accountId')->id(false)->relation('accounts', 'id');
+$lines->add('bookingId')->id(false)->relation('bookings', 'id');
 $lines->add('desc')->string(255)->nullable();
 $lines->add('price')->price()->nullable(); // above 0 is credit, below is debit
-$lines->add('vat')->type('TINYINT');
-$lines->add('created_at')->dateCreate();
-$lines->add('updated_at')->dateUpdate();
+$lines->add('createdAt')->dateCreate();
+$lines->add('updatedAt')->dateUpdate();
 
 // payments
 $payments = Migration::table('payments');

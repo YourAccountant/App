@@ -23,7 +23,7 @@ class OAuthService extends Service
                 ],
                 'json' => [
                     'action' => 'grant',
-                    'token_type' => OAuthToken::REFRESH_TOKEN,
+                    'tokenType' => OAuthToken::REFRESH_TOKEN,
                     'token' => $token->get('token'),
                     'reference' => $_GET['reference'] ?? null
                 ]
@@ -46,11 +46,11 @@ class OAuthService extends Service
         $expiry = OAuthToken::getExpiryDate($type);
 
         $payload = [
-            'token_type' => $type,
-            'client_id' => $clientId,
+            'tokenType' => $type,
+            'clientId' => $clientId,
             'expiry' => $expiry,
-            'create_date' => date('Y-m-d H:i:s'),
-            'partner_id' => $partnerId
+            'createDate' => date('Y-m-d H:i:s'),
+            'partnerId' => $partnerId
         ];
 
         $token = new OAuthToken();
@@ -58,9 +58,9 @@ class OAuthService extends Service
         $jwt = $token->generateToken($payload, $type);
 
         $token->insert([
-            'client_id' => $clientId,
-            'oauth_partner_id' => $partnerId,
-            'token_type' => $type,
+            'clientId' => $clientId,
+            'oauthPartnerId' => $partnerId,
+            'tokenType' => $type,
             'token' => $jwt
         ]);
 
@@ -75,11 +75,11 @@ class OAuthService extends Service
         $expiry = $remindMe ? date('Y-m-d H:i:s', strtotime("+1 years")) : OAuthToken::getExpiryDate($type);
 
         $payload = [
-            'token_type' => $type,
-            'client_id' => $clientId,
+            'tokenType' => $type,
+            'clientId' => $clientId,
             'expiry' => $expiry,
             'ip' => Request::getIp(),
-            'create_date' => date('Y-m-d H:i:s')
+            'createDate' => date('Y-m-d H:i:s')
         ];
 
         $token = new OAuthToken();
@@ -88,7 +88,7 @@ class OAuthService extends Service
         $session = new Session();
 
         $session->insert([
-            'client_id' => $clientId,
+            'clientId' => $clientId,
             'ip' => Request::getIp(),
             'authorization' => $jwt,
             'expiry' => $expiry
@@ -104,11 +104,11 @@ class OAuthService extends Service
         $token = new OAuthToken();
 
         $jwtPayload = [
-            'token_type' => OAuthToken::ACCESS_TOKEN,
+            'tokenType' => OAuthToken::ACCESS_TOKEN,
             'token' => $refreshToken,
-            'client_id' => $payload->client_id,
+            'clientId' => $payload->clientId,
             'expiry' => $token->getExpiryDate(OAuthToken::ACCESS_TOKEN),
-            'create_date' => date('Y-m-d H:i:s')
+            'createDate' => date('Y-m-d H:i:s')
         ];
 
         return $token->generateToken($jwtPayload, OAuthToken::ACCESS_TOKEN);

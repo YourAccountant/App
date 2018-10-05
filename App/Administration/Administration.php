@@ -8,10 +8,10 @@ class Administration extends Model
 {
     protected $table = 'administrations';
 
-    public function getByClient($clientId, $orderBy = ' created_at DESC ')
+    public function getByClient($clientId, $orderBy = ' createdAt DESC ')
     {
         $result = $this->getBuilder()
-            ->where('client_id', '=', $clientId)
+            ->where('clientId', '=', $clientId)
             ->orderBy($orderBy)
             ->exec()
             ->fetchAll();
@@ -25,7 +25,7 @@ class Administration extends Model
         return $this->getBuilder()
             ->columns('COUNT(id) as total')
             ->where('code', '=', $code)
-            ->and('client_id', '=', $this->getService('AuthService.getClientId'))
+            ->and('clientId', '=', $this->getService('AuthService.getClientId'))
             ->limit(1)
             ->exec()
             ->fetch()
@@ -37,7 +37,7 @@ class Administration extends Model
         return $this->getBuilder()
             ->columns('COUNT(id) as total')
             ->where('id', '=', $id)
-            ->and('client_id', '=', $this->getService('AuthService.getClientId'))
+            ->and('clientId', '=', $this->getService('AuthService.getClientId'))
             ->limit(1)
             ->exec()
             ->fetch()

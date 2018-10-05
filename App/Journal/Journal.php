@@ -2,19 +2,19 @@
 
 namespace App\Journal;
 
-use \Core\Foundation\Model;
 use \App\Util\Price;
 use \App\Account\Account;
 
-class Journal extends Model
+class Journal extends \App\Booking\Booking
 {
-    protected $table = "journals";
+    protected $table = "bookings";
 
     public function getJournalsFromAdministration($id)
     {
         return $this->getBuilder()
-            ->where('administration_id', '=', $id)
-            ->orderBy('`created_at` DESC')
+            ->where('administrationId', '=', $id)
+            ->and('type', '=', 'journal')
+            ->orderBy('`createdAt` DESC')
             ->exec()
             ->fetchAll();
     }

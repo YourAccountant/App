@@ -11,7 +11,7 @@ class Account extends Model
     public function getByAdministration($adminId)
     {
         return $this->getBuilder()
-            ->where('administration_id', '=', $adminId)
+            ->where('administrationId', '=', $adminId)
             ->limit(1000)
             ->exec()
             ->fetchAll();
@@ -21,7 +21,7 @@ class Account extends Model
     {
         return $this->getBuilder()
             ->columns('COUNT(id) AS total')
-            ->where('administration_id', '=', $adminId)
+            ->where('administrationId', '=', $adminId)
             ->and('code', '=', $code)
             ->limit(1)
             ->exec()
